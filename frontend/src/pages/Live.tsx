@@ -83,7 +83,7 @@ export default function Live() {
         <ErrorState error={error} onRetry={refresh} />
       ) : (
         <div className="live-grid">
-          <div className="live-map card card-flush">
+          <div className="live-map card card-flush" data-tour="live-map">
             {data ? (
               <VillageMap villages={data.villages} onSelect={(id) => nav(`/village/${id}`)} />
             ) : (
@@ -137,7 +137,7 @@ export default function Live() {
           )}
 
           {data && (
-            <div className="live-funnel">
+            <div className="live-funnel" data-tour="funnel">
               <AckFunnel alerts={data.recent_alerts} />
             </div>
           )}

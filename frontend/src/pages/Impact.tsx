@@ -107,7 +107,7 @@ function Scores() {
   const { t, lang } = useT();
   return (
     <section className="band band-paper scores-band" aria-labelledby="sc-h">
-      <div className="wrap">
+      <div className="wrap" data-tour="scores">
         <h2 id="sc-h" className="h-sec">
           <Target aria-hidden="true" /> {t('impact.sc.title')}
         </h2>

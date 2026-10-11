@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { ArrowUpRight, BatteryCharging, Cpu, ShieldCheck, Smartphone, Siren, Scale, Waves } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { PageBand } from '../components/PageBand';
+import { TourButton } from '../components/Tour';
 import { Reveal } from '../components/Reveal';
 import { useT } from '../i18n';
 
@@ -192,6 +193,7 @@ export default function How() {
             ? 'Seven steps from a forecast to a confirmed “मिल गया” on a phone in the village. Each step, the AWS service behind it, and the evidence that it matters.'
             : 'पूर्वानुमान से गाँव के फ़ोन पर “मिल गया” तक सात क़दम। हर क़दम, उसके पीछे की AWS सेवा, और यह क्यों ज़रूरी है इसका सबूत।'
         }
+        aside={<TourButton />}
       />
 
       <section className="how-band how-loop" aria-labelledby="how-loop-h">
@@ -200,7 +202,7 @@ export default function How() {
           <h2 id="how-loop-h" className="how-h">
             {en ? 'The loop' : 'पूरा चक्र'}
           </h2>
-          <ol className="how-steps">
+          <ol className="how-steps" data-tour="how-loop">
             {LOOP.map((s, i) => (
               <Reveal as="li" key={s.aws} className="how-step" delay={(i % 3) * 80}>
                 <span className="how-num" aria-hidden="true">
