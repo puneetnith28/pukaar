@@ -16,7 +16,7 @@ from Pukaar.core.log import get_logger, log, metric
 from Pukaar.delivery import dispatch
 from Pukaar.llm.bedrock import BedrockLLM
 from Pukaar.policy.guard import SYSTEM, authorize
-from Pukaar.services import rollcall
+from Pukaar.services import after_action, rollcall
 from Pukaar.services.drafting import draft_alert
 from Pukaar.store.models import Alert
 from Pukaar.store.repo import ConflictError, Repo
@@ -205,6 +205,13 @@ class Steps:
                     out["rollcall_id"] = rc.id
             except Exception as exc:  # a roll-call problem never breaks closing the alert
                 log(_LOG, "roll-call open error", 40, alert_id=alert.id, error=str(exc)[:300])
+            try:  # after-action report: stored in S3, e-mailed with SES when configured; never breaks closing
+                report = after_action.on_close(self.repo, alert.id)
+                if report.get("stored"):
+                    out["after_action_key"] = report["stored"]
+            except Exception as exc:
+                log(_LOG, "after-action error", 40, alert_id=alert.id, error=str(exc)[:300])
+                metric("AfterActionFailed")
             return out
         except Exception as exc:
             log(_LOG, "close error", 40, alert_id=alert_id, error=str(exc)[:300])

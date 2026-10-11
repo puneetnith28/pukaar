@@ -54,6 +54,8 @@ class Settings:
     guardrail_id: str = ""
     guardrail_version: str = ""
     guardrail_timeout_seconds: float = 8.0
+    # After-action e-mail (services/after_action.py): the verified SES sender. Empty = no e-mail.
+    ses_from: str = ""
 
     @property
     def guardrail_enabled(self) -> bool:
@@ -104,4 +106,5 @@ def get_settings() -> Settings:
         guardrail_id=os.environ.get("PUKAAR_GUARDRAIL_ID", ""),
         guardrail_version=os.environ.get("PUKAAR_GUARDRAIL_VERSION", ""),
         guardrail_timeout_seconds=float(os.environ.get("PUKAAR_GUARDRAIL_TIMEOUT_SECONDS", "8")),
+        ses_from=os.environ.get("PUKAAR_SES_FROM", "").strip(),
     )

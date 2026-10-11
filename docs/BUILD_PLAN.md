@@ -142,7 +142,7 @@ Sources and verdicts: the research summary in [REFERENCE_REVIEW.md](REFERENCE_RE
 | 3 | Guardrails on villager text | 1 | building |
 | 4 | Visitor tour | 1 | building |
 | 5 | Safe places and routes | 2 | planned |
-| 6 | After-action email | 2 | planned |
+| 6 | After-action email | 2 | built; e-mail needs verified SES addresses (sandbox) |
 | 7 | Live push (AppSync Events) | 2 | planned |
 | 8 | Satellite before/after | 2 | planned |
 | 9 | SMS channel | 3 | blocked on owner action |

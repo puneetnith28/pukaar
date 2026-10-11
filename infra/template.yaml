@@ -45,10 +45,17 @@ Parameters:
     Type: String
     Default: ""
     Description: Optional address subscribed to the alarm topic.
+  AfterActionFrom:
+    Type: String
+    Default: ""
+    Description: >
+      Verified SES sender for after-action reports (make ses-verify EMAIL=...). Empty = no e-mail and no SES
+      permission. Recipients come from SSM /pukaar/after_action_to (comma list); in the SES sandbox each must be verified.
 
 Conditions:
   HasWebOrigin: !Not [!Equals [!Ref WebOrigin, ""]]
   HasAlarmEmail: !Not [!Equals [!Ref AlarmEmail, ""]]
+  HasAfterActionFrom: !Not [!Equals [!Ref AfterActionFrom, ""]]
 
 Globals:
   Function:
@@ -367,9 +374,27 @@ Resources:
       Environment:
         Variables:
           PUKAAR_API_URL: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com"
+          # After-action report e-mail from the close step (services/after_action.py); unset = no e-mail.
+          PUKAAR_SES_FROM: !If [HasAfterActionFrom, !Ref AfterActionFrom, !Ref AWS::NoValue]
       Policies:
         - DynamoDBCrudPolicy: { TableName: !Ref Table }
         - S3CrudPolicy: { BucketName: !Ref Bucket }
+        # Only when AfterActionFrom is set. SES checks ses:SendEmail against the sender identity and, while the
+        # account is in the sandbox, against each recipient's verified identity too; so the grant covers this
+        # account's identities in this region and the condition pins the From address to the one configured.
+        - !If
+          - HasAfterActionFrom
+          - Statement:
+              - Sid: AfterActionEmail
+                Effect: Allow
+                Action: ses:SendEmail
+                Resource:
+                  - !Sub arn:${AWS::Partition}:ses:${AWS::Region}:${AWS::AccountId}:identity/${AfterActionFrom}
+                  # Sandbox only: the recipients' verified identities. Remove after SES production access.
+                  - !Sub arn:${AWS::Partition}:ses:${AWS::Region}:${AWS::AccountId}:identity/*
+                Condition:
+                  StringEquals: { ses:FromAddress: !Ref AfterActionFrom }
+          - !Ref AWS::NoValue
         - Statement:
             - Sid: Bedrock
               Effect: Allow

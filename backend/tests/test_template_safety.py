@@ -71,11 +71,18 @@ ALWAYS_ON = {
 }
 
 
+def _unwrap_if(pol: Any) -> list:
+    """A conditional policy (!If [cond, policy, !Ref AWS::NoValue]) is checked as if its condition were true."""
+    if isinstance(pol, dict) and "Fn::If" in pol:
+        return [p for branch in pol["Fn::If"][1:] for p in _unwrap_if(branch)]
+    return [pol]
+
+
 def _statements() -> list[tuple[str, dict]]:
     out: list[tuple[str, dict]] = []
     for name, res in RES.items():
         props = res.get("Properties", {})
-        for pol in props.get("Policies") or []:
+        for pol in [p for raw in props.get("Policies") or [] for p in _unwrap_if(raw)]:
             if isinstance(pol, dict) and "Statement" in pol:
                 out += [(name, s) for s in pol["Statement"]]
         for pol in props.get("Policies", []) if res["Type"] == "AWS::IAM::Role" else []:
