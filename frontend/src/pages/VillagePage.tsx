@@ -12,6 +12,7 @@ import { Sparkline } from '../components/Sparkline';
 import { TimeToEar } from '../components/TimeToEar';
 import { DeniedNote, EmptyState, ErrorState, Skeleton, SkeletonCards } from '../components/States';
 import { usePoll } from '../hooks/usePoll';
+import { CHANNELS, PUBLIC_CHANNELS } from '../lib/live';
 import { enumLabels, useT } from '../i18n';
 import { fmtAgo, fmtDate, fmtNumber, fmtTime } from '../lib/format';
 import { isLevel } from '../lib/levels';
@@ -24,7 +25,10 @@ import type { Alert, DecisionTrace, GaugeView, Level, PublicRollCall, SoilView, 
 
 function AlertDetails({ alert }: { alert: Alert }) {
   const { t, lang } = useT();
-  const { data, error, loading } = usePoll(() => api.alert(alert.id), [alert.id], 15000);
+  const { data, error, loading } = usePoll(() => api.alert(alert.id), [alert.id], 15000, {
+    live: [CHANNELS.alerts, CHANNELS.deliveries],
+    match: (e) => e.data.alert_id === alert.id,
+  });
   if (loading && !data) return <Skeleton lines={3} />;
   if (error && !data) return error.isDenied ? <DeniedNote error={error} /> : <ErrorState error={error} compact />;
   if (!data) return null;
@@ -326,7 +330,10 @@ export default function VillagePage() {
   const { id = '' } = useParams();
   const { t, lang, pick } = useT();
   const signedIn = Boolean(useAuth((s) => s.token));
-  const { data, error, loading, refresh } = usePoll(() => api.village(id), [id]);
+  const { data, error, loading, refresh } = usePoll(() => api.village(id), [id], 15000, {
+    live: PUBLIC_CHANNELS,
+    match: (e) => e.data.village_id === id,
+  });
 
   if (loading && !data)
     return (

@@ -143,7 +143,7 @@ Sources and verdicts: the research summary in [REFERENCE_REVIEW.md](REFERENCE_RE
 | 4 | Visitor tour | 1 | building |
 | 5 | Safe places and routes | 2 | planned |
 | 6 | After-action email | 2 | planned |
-| 7 | Live push (AppSync Events) | 2 | planned |
+| 7 | Live push (AppSync Events) | 2 | built, not yet deployed |
 | 8 | Satellite before/after | 2 | planned |
 | 9 | SMS channel | 3 | blocked on owner action |
 | 10 | Voice call | 3 | planned (owner action may be needed) |

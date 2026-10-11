@@ -7,6 +7,7 @@ import { AlertStatusChip, DeliveryChips } from '../../components/Chips';
 import { LevelBadge } from '../../components/Level';
 import { Call112 } from '../../components/Shell';
 import { usePoll } from '../../hooks/usePoll';
+import { CHANNELS } from '../../lib/live';
 import { useT } from '../../i18n';
 import { auditLinkForAlert } from '../../lib/audit';
 import { capXmlUrl } from '../../lib/cap';
@@ -39,9 +40,10 @@ function Console() {
   const me = usePoll(() => api.me(), [], 0);
   const role = me.data?.role ?? user?.role ?? 'officer';
   const officer = role !== 'pradhan';
-  const villages = usePoll(() => api.villages(), []);
-  const pending = usePoll(() => api.alerts({ status: 'pending' }), []);
-  const recent = usePoll(() => api.alerts(), []);
+  // Live push refetches these the moment a level, an alert or a count changes; polling is the fallback.
+  const villages = usePoll(() => api.villages(), [], 15000, { live: [CHANNELS.levels, CHANNELS.rollcall] });
+  const pending = usePoll(() => api.alerts({ status: 'pending' }), [], 15000, { live: [CHANNELS.alerts, CHANNELS.officer] });
+  const recent = usePoll(() => api.alerts(), [], 15000, { live: [CHANNELS.alerts, CHANNELS.deliveries] });
   const reports = usePoll(() => api.reports(), []);
   const directives = usePoll(() => api.directives(), []);
   const replay = usePoll(() => api.replayStatus(), []);
@@ -272,7 +274,10 @@ function RecentAlert({ alert: a, showAudit }: { alert: Alert; showAudit: boolean
 
 function Deliveries({ alertId }: { alertId: string }) {
   const { t, lang } = useT();
-  const { data, error, loading } = usePoll(() => api.alert(alertId), [alertId], 15000);
+  const { data, error, loading } = usePoll(() => api.alert(alertId), [alertId], 15000, {
+    live: [CHANNELS.alerts, CHANNELS.deliveries],
+    match: (e) => e.data.alert_id === alertId,
+  });
   if (loading && !data) return <Skeleton lines={2} />;
   if (error && !data) return <p className="small bad-text">{error.messageEn}</p>;
   const ds = data?.deliveries ?? [];
