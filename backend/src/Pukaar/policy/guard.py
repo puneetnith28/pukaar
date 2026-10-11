@@ -39,6 +39,7 @@ DENY_HINTS = {
     "auto_send": "Auto-send is allowed only for a critical alert after every officer timed out.",
     "use_tool": "That tool is not on the agent's read-only allowlist.",
     "dev_link": "Only a district officer can open the demo approval link.",
+    "tick_checklist": "Only a district officer or this village's own pradhan can change its checklist.",
 }
 
 
