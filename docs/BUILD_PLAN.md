@@ -148,10 +148,10 @@ Sources and verdicts: the research summary in [REFERENCE_REVIEW.md](REFERENCE_RE
 | 9 | SMS channel | 3 | blocked: owner must activate AWS End User Messaging; India needs DLT registration |
 | 10 | Voice call | 3 | needs an Indian telecom partner: Amazon Connect does not place calls to Indian numbers |
 | 11 | Web Push to officers | 3 | planned |
-| 12 | Learning gauge thresholds | 3 | building |
+| 12 | Learning gauge thresholds | 3 | built (proposal and faults from the gauge's own record; accepted by an officer only, audited) |
 | 13 | Agents page (EcoLafaek-style) | 2 | built |
 | 14 | Sensors page and device path | 2 | built |
 | 15 | Antecedent soil moisture | 2 | built, flag off by default (back-test in [SCORING.md](SCORING.md#soil-moisture-modifier)) |
 | 16 | Two-stage readiness and checklists | 2 | built |
 | 17 | "Surakshit Hoon" roll-call | 2 | built |
-| 18 | Virtual staff gauges | 3 | building |
+| 18 | Virtual staff gauges | 3 | built (reference photo and scale, villager's mark on a report, officer confirm/adjust; vision reading waits for Bedrock) |

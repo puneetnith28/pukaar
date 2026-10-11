@@ -311,6 +311,8 @@ Resources:
         Village: { Type: HttpApi, Properties: { ApiId: !Ref HttpApi, Path: "/villages/{id}", Method: GET, Auth: { Authorizer: NONE } } }
         # Read-only: baked OpenStreetMap safe places and routes plus the shelter ledger. Ledger writes go through ANY /{proxy+} (Cognito).
         SafePlaces: { Type: HttpApi, Properties: { ApiId: !Ref HttpApi, Path: "/villages/{id}/safe-places", Method: GET, Auth: { Authorizer: NONE } } }
+        # Virtual staff gauges: the reference photo and scale the anonymous report page compares against (no personal data).
+        StaffGauges: { Type: HttpApi, Properties: { ApiId: !Ref HttpApi, Path: "/villages/{id}/staff-gauges", Method: GET, Auth: { Authorizer: NONE } } }
         ReportCreate: { Type: HttpApi, Properties: { ApiId: !Ref HttpApi, Path: /reports, Method: POST, Auth: { Authorizer: NONE } } }
         AlertAck: { Type: HttpApi, Properties: { ApiId: !Ref HttpApi, Path: "/alerts/{id}/ack", Method: POST, Auth: { Authorizer: NONE } } }
         AlertAudio: { Type: HttpApi, Properties: { ApiId: !Ref HttpApi, Path: "/alerts/{id}/audio", Method: GET, Auth: { Authorizer: NONE } } }

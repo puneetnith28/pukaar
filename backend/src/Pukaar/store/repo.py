@@ -3,6 +3,7 @@
 Keys:
   VILLAGE#id  META | READING#iso | SENSOR#iso#device | SENSORLAST#device | REPORT#iso#id | DEDUPE#window | RECIPIENT#id
               | EVENT#date | DIRECTIVE#iso#id | CHECKLIST#item | SHELTER#place_id | ROLLCALL#iso#id (pointer, TTL 30 days)
+              | STAFFGAUGE#id (virtual staff gauge: reference photo key, scale, marks)
   ALERT#id    META | DELIVERY#recipient | TIMELINE#iso#n
   ROLLCALL#id META | ASKED#recipient | RESP#recipient   (safety roll-call; TTL 30 days)
   SAFESHARE#id META                   (family link pointer; TTL 7 days)
@@ -45,6 +46,7 @@ from Pukaar.store.models import (
     RollCallResponse,
     SensorReading,
     ShelterStatus,
+    StaffGauge,
     TimelineEvent,
     Village,
 )
@@ -363,6 +365,18 @@ class Repo:
     def list_shelters(self, village_id: str) -> dict[str, ShelterStatus]:
         rows = [_model(ShelterStatus, i) for i in self._query(f"VILLAGE#{village_id}", "SHELTER#")]
         return {r.place_id: r for r in rows}
+
+    # -- virtual staff gauges -------------------------------------------
+    def put_staff_gauge(self, g: StaffGauge) -> None:
+        self._put({"pk": f"VILLAGE#{g.village_id}", "sk": f"STAFFGAUGE#{g.id}", "kind": "staff_gauge", **g.model_dump()})
+
+    def get_staff_gauge(self, village_id: str, gauge_id: str) -> StaffGauge | None:
+        item = self._get(f"VILLAGE#{village_id}", f"STAFFGAUGE#{gauge_id}")
+        return _model(StaffGauge, item) if item else None
+
+    def list_staff_gauges(self, village_id: str) -> list[StaffGauge]:
+        gauges = [_model(StaffGauge, i) for i in self._query(f"VILLAGE#{village_id}", "STAFFGAUGE#")]
+        return sorted(gauges, key=lambda g: g.created_at)
 
     # -- alerts ----------------------------------------------------------
     def put_alert(self, a: Alert) -> None:
