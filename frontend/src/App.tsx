@@ -50,6 +50,7 @@ class PageBoundary extends Component<{ children: ReactNode }, { failed: boolean 
 // everything else (and MapLibre) loads on demand.
 const Landing = lazyPage(() => import('./pages/Landing'));
 const Live = lazyPage(() => import('./pages/Live'));
+const How = lazyPage(() => import('./pages/How'));
 const ConsolePage = lazyPage(() => import('./pages/console/ConsolePage'));
 const VillagePage = lazyPage(() => import('./pages/VillagePage'));
 const Track = lazyPage(() => import('./pages/Track'));
@@ -76,6 +77,7 @@ export default function App() {
           <Route element={<Shell />}>
             <Route index element={<Landing />} />
             <Route path="live" element={<Live />} />
+            <Route path="how" element={<How />} />
             <Route path="report" element={<Report />} />
             <Route path="t/:code" element={<Track />} />
             <Route path="a/:token" element={<Approve />} />
