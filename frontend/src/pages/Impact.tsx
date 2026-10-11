@@ -101,7 +101,7 @@ function Scenario({ sc, i }: { sc: BacktestScenario; i: number }) {
   );
 }
 
-const CONFIG_KEY: Record<string, Key> = { rain: 'impact.sc.rain', river: 'impact.sc.river', both: 'impact.sc.both' };
+const CONFIG_KEY: Record<string, Key> = { rain: 'impact.sc.rain', river: 'impact.sc.river', both: 'impact.sc.both', both_soil: 'impact.sc.both_soil' };
 
 function Scores() {
   const { t, lang } = useT();

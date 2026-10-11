@@ -54,6 +54,17 @@ class Thresholds(BaseModel):
     source: str = "open-meteo flood API daily history 1984-2024"
 
 
+class SoilRange(BaseModel):
+    """The village's own root-zone soil moisture range (m³/m³): dry = 5th, wet = 95th percentile.
+
+    Saturation S = (sm - dry) / (wet - dry), clipped to 0..1 (services/soil.py).
+    """
+
+    dry: float
+    wet: float
+    source: str = "default"
+
+
 class GaugeConfig(BaseModel):
     """A river-stage gauge at the village (e.g. ESP32 + JSN-SR04T under a bridge deck).
 
@@ -85,6 +96,7 @@ class Village(BaseModel):
     calm_sweeps: int = 0
     thresholds: Thresholds | None = None
     gauge: GaugeConfig | None = None
+    soil: SoilRange | None = None
     open_alert_id: str | None = None
     replay: bool = False
 
@@ -97,6 +109,10 @@ class Reading(BaseModel):
     discharge: float | None = None
     discharge_forecast: list[dict[str, Any]] = Field(default_factory=list)
     discharge_peak: float | None = None
+    # Daily river discharge from today up to 7 days ahead: the "get ready" outlook (readiness.py).
+    discharge_outlook: list[dict[str, Any]] = Field(default_factory=list)
+    # Root-zone soil moisture now (m³/m³): mean of the 9-27 cm and 27-81 cm layers (soil.py).
+    soil_moisture_root: float | None = None
     rain_level: Level = "normal"
     river_level: Level = "normal"
     source: str = "open-meteo"
@@ -219,6 +235,19 @@ class Delivery(BaseModel):
     attempts: int = 0
     acknowledged_at: str | None = None
     error: str | None = None
+
+
+class ChecklistItem(BaseModel):
+    """One early-action task for a village (services/checklist.py)."""
+
+    village_id: str
+    item: str
+    label_en: str
+    label_hi: str
+    order: int = 0
+    done: bool = False
+    done_by: str | None = None
+    done_at: str | None = None
 
 
 class Directive(BaseModel):

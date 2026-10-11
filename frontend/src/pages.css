@@ -616,7 +616,7 @@
 .impact .candid { border-left: 3px solid var(--crimson); }
 .impact .scores-band { border-top: 1px solid var(--line); }
 .impact .sc-lead { max-width: 62ch; margin: 0 0 var(--s-4); }
-.impact .score-grid { list-style: none; margin: var(--s-4) 0 0; padding: 0; display: grid; gap: var(--s-3); grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.impact .score-grid { list-style: none; margin: var(--s-4) 0 0; padding: 0; display: grid; gap: var(--s-3); grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); }
 .impact .score-grid > li { border: 1px solid var(--line); border-radius: 14px; padding: var(--s-4); display: grid; gap: var(--s-2); min-width: 0; }
 .impact .score-grid > li.is-pukaar { border-color: var(--gold); background: var(--accent-soft); }
 .impact .score-name { margin: 0; font-family: var(--font-mono); font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-2); }
@@ -775,4 +775,63 @@
   .how-stats, .how-trust, .how-steps { grid-template-columns: 1fr; }
   .how-card-lead { grid-column: auto; }
   .how-cta-row .btn { flex: 1 1 100%; justify-content: center; }
+}
+
+/* ================================================================
+ * Readiness (soft "get ready" trigger) and early-action checklist
+ * ================================================================ */
+.ready-card { display: grid; gap: var(--s-5); border-radius: var(--pg-r); box-shadow: none; padding: var(--pg-pad); min-width: 0; }
+.ready-banner {
+  display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 14px; align-items: start;
+  padding: 16px 18px; border-radius: 4px 14px 14px 4px; border: 1px solid var(--line); border-left: 4px solid var(--line-2);
+  background: var(--surface-2);
+}
+.ready-banner > svg.lucide { width: 26px; height: 26px; color: var(--ink-3); margin-top: 2px; }
+.ready-banner p { margin: 0 0 4px; overflow-wrap: anywhere; }
+.ready-state { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.ready-state strong { font-size: 1.05rem; }
+.ready-banner.is-ready { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); border-left-color: var(--accent); background: var(--accent-soft); }
+.ready-banner.is-ready > svg.lucide { color: var(--accent-text); }
+.ready-banner.is-ready .ready-state strong {
+  font-family: var(--font-display); font-weight: 400; text-transform: uppercase; font-size: 1.7rem; line-height: 1; color: var(--accent-text);
+}
+.ready-banner.is-ready .ready-state strong:lang(hi) { font-family: var(--font-hi); font-weight: 800; text-transform: none; font-size: 1.4rem; }
+
+.checklist { display: grid; gap: var(--s-3); min-width: 0; }
+.checklist-head { display: flex; align-items: center; gap: 14px; }
+.checklist-head h3 { margin: 0; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 700; color: var(--ink-2); }
+.checklist-head h3:lang(hi) { font-family: var(--font-hi); letter-spacing: 0; font-size: 0.95rem; text-transform: none; }
+.checklist-head p { margin: 2px 0 0; }
+.ring { flex: none; }
+.ring-track { fill: none; stroke: var(--surface-3); stroke-width: 7; }
+.ring-fill { fill: none; stroke: var(--accent); stroke-width: 7; stroke-linecap: round; transition: stroke-dasharray 500ms var(--pg-ease); }
+.ring-text { font-family: var(--font-mono); font-size: 13px; font-weight: 700; fill: var(--ink); }
+.check-items { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; border-top: 1px solid var(--line); }
+.check-items > li { display: grid; gap: 2px; padding: 10px 0; border-bottom: 1px solid var(--line); min-width: 0; }
+.check-row { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 10px; align-items: start; min-height: 44px; }
+label.check-row { cursor: pointer; }
+.check-row input[type='checkbox'] { width: 22px; height: 22px; margin: 2px 0 0; accent-color: var(--accent); cursor: pointer; }
+.check-icon { width: 22px; height: 22px; color: var(--ink-3); margin-top: 2px; }
+.check-text { display: grid; gap: 2px; min-width: 0; overflow-wrap: anywhere; }
+.check-items > li.is-done .check-text > span:first-child { color: var(--ink-2); }
+.check-by { padding-left: 38px; font-family: var(--font-mono); font-size: 0.72rem; }
+
+/* console: soft trigger chip */
+.chip-ready { background: var(--accent-soft); color: var(--accent-text); border-color: color-mix(in srgb, var(--accent) 40%, transparent); }
+
+/* soil moisture: saturation bar, 0..1 with the 0.8 mark */
+.soil-bar { position: relative; height: 14px; border-radius: 99px; background: var(--surface-3); overflow: hidden; margin-top: 10px; }
+.soil-zone { position: absolute; top: 0; bottom: 0; background: color-mix(in srgb, var(--accent) 22%, transparent); }
+.soil-fill { position: absolute; left: 0; top: 3px; bottom: 3px; border-radius: 99px; background: var(--ink-3); }
+.soil-bar.is-wet .soil-fill { background: var(--accent); }
+.soil-mark { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--accent-text); transform: translateX(-1px); }
+.soil-scale { display: flex; justify-content: space-between; gap: 12px; margin: 4px 0 0; font-family: var(--font-mono); }
+.soil-legend { display: flex; align-items: center; gap: 8px; margin: 0 0 8px; }
+.soil-key { flex: none; width: 2px; height: 14px; background: var(--accent-text); }
+.ev-soil p { overflow-wrap: anywhere; }
+
+@media (max-width: 560px) {
+  .ready-banner { grid-template-columns: 1fr; }
+  .ready-banner > svg.lucide { display: none; }
+  .check-by { padding-left: 0; }
 }

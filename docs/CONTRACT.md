@@ -46,10 +46,21 @@ pradhan token and passes `policy.guard.authorize()`.
 ```
 Village   {id, name, name_hi, district, lat, lon, coords_verified, population|null,
            level, level_since, calm_sweeps, thresholds{watch,warning,critical}|null,
-           latest_reading: Reading|null, open_alert_id|null}
+           latest_reading: Reading|null, open_alert_id|null, soil{dry,wet,source}|null,
+           readiness: Readiness}
 Reading   {village_id, at, rain_24h_mm, rain_hourly[{t,mm}], discharge|null,
-           discharge_forecast[{date,value}], discharge_peak|null, rain_level, river_level,
-           source: "open-meteo"|"replay", replay}
+           discharge_forecast[{date,value}], discharge_peak|null,
+           discharge_outlook[{date,value}] (today..+7 days), soil_moisture_root|null (m³/m³),
+           rain_level, river_level, source: "open-meteo"|"replay", replay}
+Readiness {state: "none"|"get_ready", available, horizon_days|null, peak_day|null,
+           peak_vs_watch_ratio|null, peak_discharge|null, watch|null, source,
+           window_days[2,7], days[{date,days_ahead,value}], from_reading|null, replay}
+           (soft trigger: never sends an alert, never changes the level)
+Soil      {moisture_root|null, saturation|null, dry, wet, range_source, calibrated, factor,
+           factor_if_on, enabled, applied, state: "no_reading"|"off"|"applied"|"below_threshold",
+           saturated_at, layers[], at|null, replay}
+Checklist {items[{village_id, item, label_en, label_hi, order, done, done_by|null, done_at|null}],
+           done, total}
 Alert     {id, village_id, village_name, village_name_hi, level, previous_level, status,
            created_at, updated_at, text_hi, text_en, reason_en, reasoning_model,
            draft_check{passed, reason}, decision_trace{...}, recipients_count,
@@ -83,8 +94,12 @@ POST /me/telegram-link       officer: {} -> {code, command, expires_in_seconds} 
 POST /auth/dev-login         local only: {username} -> {token, username, role}
 GET  /villages               [Village]
 GET  /villages/{id}          {village, readings[<=96], alerts[], reports[], past_events[PastEvent],
-                              directives[<=5 Directive], nowcast|null}
+                              directives[<=5 Directive], nowcast|null, gauge|null, soil: Soil,
+                              checklist: Checklist}
                              nowcast = {likely_level, hours, text_en, text_hi}
+POST /villages/{id}/checklist/{item}  officer (any village) or pradhan (own village only), Cedar
+                             action tick_checklist: {done: bool} -> Checklist; 404 unknown village or item;
+                             each change writes an Audit row (checklist_tick / checklist_untick)
 GET  /alerts?status=&village_id=   [Alert]
 GET  /alerts/{id}            {alert, deliveries[], timeline[Event], audit[Audit]}
 POST /alerts/{id}/approve    officer: {} -> Alert; 409 {detail{code,message_en,message_hi}} when late;

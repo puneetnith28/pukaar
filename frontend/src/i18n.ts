@@ -436,6 +436,7 @@ export const dict = {
   'impact.sc.rain': { hi: 'सिर्फ़ बारिश', en: 'Rain only' },
   'impact.sc.river': { hi: 'सिर्फ़ नदी', en: 'River only' },
   'impact.sc.both': { hi: 'दोनों (पुकार)', en: 'Both (Pukaar)' },
+  'impact.sc.both_soil': { hi: 'दोनों + मिट्टी की नमी (बंद)', en: 'Both + soil (off)' },
   'impact.sc.hits': { hi: 'समय पर चेतावनी', en: 'Hits' },
   'impact.sc.misses': { hi: 'चूक', en: 'Misses' },
   'impact.sc.fa': { hi: 'झूठी चेतावनी', en: 'False alarms' },
@@ -482,6 +483,64 @@ export const dict = {
     en: 'Illustrative thresholds, to be set from the gauge\'s own record after installation.',
   },
   'nav.how': { hi: 'कैसे काम करता है', en: 'How it works' },
+
+  // two-stage readiness (soft "get ready" trigger) and early-action checklist
+  'ready.title': { hi: 'तैयारी', en: 'Readiness' },
+  'ready.lead': {
+    hi: 'दो चरण: कुछ दिन पहले "तैयार रहें", और खतरा पास आने पर 24 घंटे के स्तर से चेतावनी।',
+    en: 'Two stages: "get ready" days out, then alerts from the 24-hour levels when the danger is close.',
+  },
+  'ready.get': { hi: 'तैयार रहें', en: 'Get ready' },
+  'ready.get.lead': {
+    hi: 'नदी का 7 दिन का पूर्वानुमान {d} दिन बाद Watch सीमा तक पहुँचता है। सबसे ऊँचा दिन {day}, सीमा का {r} गुना।',
+    en: 'The 7-day river outlook reaches the Watch threshold in {d} days. Peak on {day}, {r}× the Watch threshold.',
+  },
+  'ready.none': { hi: 'नदी के 7 दिन के पूर्वानुमान में कोई संकेत नहीं', en: 'No signal in the 7-day river outlook' },
+  'ready.none.lead': { hi: 'दिन 2 से 7 में सबसे ऊँचा बहाव Watch सीमा का {r} गुना है।', en: 'Highest flow on days 2 to 7 is {r}× the Watch threshold.' },
+  'ready.unavailable': { hi: 'नदी का 7 दिन का पूर्वानुमान अभी नहीं मिला', en: 'The 7-day river outlook is not available yet' },
+  'ready.soft': {
+    hi: 'यह नरम संकेत है: इससे कोई चेतावनी नहीं जाती और स्तर नहीं बदलता। इसे तैयारी के लिए इस्तेमाल करें।',
+    en: 'A soft trigger: it sends no alert and never changes the level. Use it to prepare.',
+  },
+  'ready.replay': { hi: 'रीप्ले का पुराना डेटा', en: 'From replay data' },
+  'ready.checklist': { hi: 'पहले से तैयारी की सूची', en: 'Early-action checklist' },
+  'ready.progress': { hi: '{n} में से {d} पूरे', en: '{d} of {n} done' },
+  'ready.done.by': { hi: '{u} · {t}', en: '{u} · {t}' },
+  'ready.readonly': {
+    hi: 'गाँव के प्रधान या ज़िला अधिकारी साइन इन करके इसे बदल सकते हैं।',
+    en: "The village's pradhan or a district officer can sign in to tick these.",
+  },
+  'ready.save.error': { hi: 'बदलाव सहेजा नहीं जा सका। फिर कोशिश करें।', en: 'Could not save the change. Try again.' },
+
+  // antecedent soil moisture
+  'soil.title': { hi: 'मिट्टी की नमी (जड़ तक)', en: 'Soil (root zone)' },
+  'soil.sat': { hi: 'भराव (S)', en: 'Saturation (S)' },
+  'soil.lead': {
+    hi: '9 से 81 सेमी गहराई की नमी, इस गाँव के अपने 2 साल के रिकॉर्ड पर: 0 सूखा, 1 सबसे गीला।',
+    en: "Moisture 9 to 81 cm deep, on this village's own 2-year range: 0 is dry, 1 is the wettest.",
+  },
+  'soil.applied': { hi: 'मिट्टी भरी हुई: बारिश की सीमाएँ × {f}', en: 'Saturated: rain bands × {f}' },
+  'soil.off': {
+    hi: 'यह सुधार अभी बंद है (बैक-टेस्ट देखें)। चालू होता तो बारिश की सीमाएँ × {f}',
+    en: 'Modifier is off (see the back-test). If it were on: rain bands × {f}',
+  },
+  'soil.below': { hi: 'S 0.8 से कम: बारिश की IMD सीमाएँ वैसी ही', en: 'S below 0.8: IMD rain bands unchanged' },
+  'soil.none': { hi: 'मिट्टी की नमी का माप नहीं मिला', en: 'No soil moisture reading' },
+  'soil.default': {
+    hi: 'इस गाँव की अपनी सीमा अभी तय नहीं: सामान्य 0.15 से 0.45 m³/m³ ली गई।',
+    en: 'No calibrated range for this village: the default 0.15 to 0.45 m³/m³ is used.',
+  },
+  'soil.never': {
+    hi: 'मिट्टी अकेले कभी स्तर नहीं बढ़ाती; यह सिर्फ बारिश की सीमाएँ, ज़्यादा से ज़्यादा 30%, नीचे करती है।',
+    en: 'Soil alone never raises a level; it only lowers the rain bands, by 30% at most.',
+  },
+  'soil.mark': { hi: 'निशान S = 0.8: इससे ऊपर बारिश की सीमाएँ घटती हैं', en: 'Mark at S = 0.8: above it the rain bands drop' },
+  'soil.off.below': {
+    hi: 'यह सुधार अभी बंद है (बैक-टेस्ट देखें); S 0.8 से कम है, इसलिए चालू होता तब भी IMD सीमाएँ वैसी ही रहतीं।',
+    en: 'Modifier is off (see the back-test); S is below 0.8, so the IMD bands would not change anyway.',
+  },
+  'soil.dry': { hi: '0 सूखा ({v})', en: '0 dry ({v})' },
+  'soil.wet': { hi: '1 गीला ({v})', en: '1 wet ({v})' },
 } satisfies Record<string, Entry>;
 
 export type Key = keyof typeof dict;

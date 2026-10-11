@@ -248,6 +248,8 @@ sign-in; the demo accounts are in [DEMO.md](DEMO.md).
 | Bedrock Guardrails screening of villager text (prompt attacks and orders to the system held for an officer, phone numbers masked, local heuristic fallback) | Built and tested offline with a scripted guardrail; in the template, not yet deployed. `ApplyGuardrail` was checked on this account on 11 Oct 2026 and blocks a prompt attack without model access, so it will be the first live Bedrock feature |
 | Ask Pukaar analyst agent | Built (falls back to a keyword router without a model) |
 | Replay and back-test on archived data | Built ([data/backtest.json](data/backtest.json)) |
+| Antecedent soil moisture (root-zone saturation lowers the IMD rain bands by up to 30%) | Built and back-tested; **off by default**: it changed no scored outcome and its only new Warning is at a village we could not verify ([docs/SCORING.md](docs/SCORING.md#soil-moisture-modifier)) |
+| Two-stage readiness: a "get ready" outlook from the 7-day river forecast (never an alert, never a level) and a per-village early-action checklist ticked by the pradhan or an officer (Cedar-checked, audited) | Built |
 | Web app: landing, live map, officer console, village, report, track, approve, impact | Built (see `frontend/`) |
 | Deployed stack on AWS | **Live** since 11 Oct 2026: stack `pukaar-dev`, web app on Amplify. Checked live: Cognito sign-in, a replay on AWS starting real Step Functions approval executions, an officer approval moving an alert to delivered, and Polly writing the Hindi MP3 to S3. Steps: [docs/DEPLOY.md](docs/DEPLOY.md) |
 | Bedrock on the live stack | **Pending.** Account model access has not been granted yet (AWS support case filed). Until it is, every live draft is the fixed Hindi template, labelled `rule-fallback` in the console and the audit trail, and Ask Pukaar uses its keyword router. Bedrock Guardrails do not wait on this: `ApplyGuardrail` works without model access |
@@ -297,6 +299,8 @@ Not yet measured:
 
 - Village coordinates: Open-Meteo geocoding (GeoNames). Not verified on the ground.
 - Rain forecasts: Open-Meteo forecast API and historical forecast API.
+- Root-zone soil moisture (9-27 and 27-81 cm): the same Open-Meteo forecast request; the
+  historical-forecast API for each village's 2024-2025 range and for the replays.
 - River discharge and its 1984-2024 history: Open-Meteo flood API (GloFAS).
 - Rain bands: India Meteorological Department 24-hour categories (64.5, 115.6 and 204.5 mm).
 

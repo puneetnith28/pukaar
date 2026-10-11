@@ -4,14 +4,14 @@
 // Context:    level, approved, all_officers_timed_out, replay, channel, village_id.
 
 @id("officer-operate")
-@desc("Officers run the console: approve or decline alerts, triage reports, issue directives, run replays, read the audit trail and ask the analyst.")
+@desc("Officers run the console: approve or decline alerts, triage reports, issue directives, run replays, read the audit trail, ask the analyst and tick any village's early-action checklist.")
 permit (
   principal is Pukaar::Officer,
   action in [
     Pukaar::Action::"view_console", Pukaar::Action::"approve", Pukaar::Action::"decline",
     Pukaar::Action::"view_reports", Pukaar::Action::"set_report_state", Pukaar::Action::"issue_directive",
     Pukaar::Action::"start_replay", Pukaar::Action::"read_audit", Pukaar::Action::"ask_analyst",
-    Pukaar::Action::"health_deep", Pukaar::Action::"dev_link"
+    Pukaar::Action::"health_deep", Pukaar::Action::"dev_link", Pukaar::Action::"tick_checklist"
   ],
   resource
 );
@@ -24,6 +24,15 @@ permit (
   resource
 )
 when { context.village_id == "" || principal.village_ids.contains(context.village_id) };
+
+@id("pradhan-own-checklist")
+@desc("A pradhan ticks the early-action checklist of their own village only.")
+permit (
+  principal is Pukaar::Pradhan,
+  action == Pukaar::Action::"tick_checklist",
+  resource is Pukaar::Village
+)
+when { context.village_id != "" && principal.village_ids.contains(context.village_id) };
 
 @id("system-deliver-approved")
 @desc("The system delivers an alert only after an officer approved it.")

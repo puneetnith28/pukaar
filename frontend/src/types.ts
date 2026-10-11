@@ -60,10 +60,71 @@ export interface Reading {
   discharge: number | null;
   discharge_forecast: { date: string; value: number }[];
   discharge_peak: number | null;
+  /** Daily discharge from today up to 7 days ahead (the "get ready" outlook). */
+  discharge_outlook?: { date: string; value: number }[];
+  /** Root-zone soil moisture now (m³/m³), mean of the 9-27 and 27-81 cm layers. */
+  soil_moisture_root?: number | null;
   rain_level: Level;
   river_level: Level;
   source: 'open-meteo' | 'replay';
   replay: boolean;
+}
+
+export interface SoilRange {
+  dry: number;
+  wet: number;
+  source?: string;
+}
+
+/** Soft "get ready" trigger from the river outlook, days 2-7. Never changes the level. */
+export interface Readiness {
+  state: 'none' | 'get_ready';
+  available?: boolean;
+  horizon_days: number | null;
+  peak_day: string | null;
+  peak_vs_watch_ratio: number | null;
+  peak_discharge?: number | null;
+  watch?: number | null;
+  source: string;
+  window_days?: [number, number];
+  days?: { date: string; days_ahead: number; value: number }[];
+  from_reading?: string | null;
+  replay?: boolean;
+}
+
+/** Soil-moisture state for the evidence card (services/soil.py). */
+export interface SoilView {
+  moisture_root: number | null;
+  saturation: number | null;
+  dry: number;
+  wet: number;
+  range_source: string;
+  calibrated: boolean;
+  factor: number;
+  factor_if_on: number;
+  enabled: boolean;
+  applied: boolean;
+  state: 'no_reading' | 'off' | 'applied' | 'below_threshold';
+  saturated_at: number;
+  at: string | null;
+  replay?: boolean;
+}
+
+export interface ChecklistItem {
+  village_id: string;
+  item: string;
+  label_en: string;
+  label_hi: string;
+  order: number;
+  done: boolean;
+  done_by: string | null;
+  done_at: string | null;
+}
+
+export interface Checklist {
+  items: ChecklistItem[];
+  done: number;
+  total: number;
 }
 
 export interface Village extends SampleFlag {
@@ -81,6 +142,8 @@ export interface Village extends SampleFlag {
   thresholds: Thresholds | null;
   latest_reading: Reading | null;
   open_alert_id: string | null;
+  soil?: SoilRange | null;
+  readiness?: Readiness | null;
   /** True while a replay owns this village's level. */
   replay?: boolean;
 }
@@ -324,6 +387,8 @@ export interface VillageDetail extends SampleFlag {
   nowcast: Nowcast | null;
   directives?: Directive[];
   gauge?: GaugeView | null;
+  soil?: SoilView | null;
+  checklist?: Checklist | null;
 }
 
 export interface AlertDetail extends SampleFlag {

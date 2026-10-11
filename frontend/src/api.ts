@@ -9,6 +9,7 @@ import type {
   AskResponse,
   Audit,
   Backtest,
+  Checklist,
   CreateReportResponse,
   DevApprovalLink,
   DevLoginResponse,
@@ -182,6 +183,8 @@ export const api = {
 
   villages: () => request<Village[]>('/villages'),
   village: (id: string) => request<VillageDetail>(`/villages/${enc(id)}`),
+  setChecklist: (villageId: string, item: string, done: boolean) =>
+    request<Checklist>(`/villages/${enc(villageId)}/checklist/${enc(item)}`, { method: 'POST', body: { done } }),
 
   alerts: (p: { status?: AlertStatus; village_id?: string } = {}) => request<Alert[]>(`/alerts${qs(p)}`),
   alert: (id: string) => request<AlertDetail>(`/alerts/${enc(id)}`),

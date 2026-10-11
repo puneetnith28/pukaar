@@ -2,7 +2,7 @@
 
 Keys:
   VILLAGE#id  META | READING#iso | SENSOR#iso#device | SENSORLAST#device | REPORT#iso#id | DEDUPE#window | RECIPIENT#id
-              | EVENT#date | DIRECTIVE#iso#id
+              | EVENT#date | DIRECTIVE#iso#id | CHECKLIST#item
   ALERT#id    META | DELIVERY#recipient | TIMELINE#iso#n
   ALERTLOG    iso#alert_id            (index of every alert, newest last)
   REPORTREF#id META                   (pointer to the report item)
@@ -29,6 +29,7 @@ from Pukaar.store.models import (
     OPEN_ALERT_STATUSES,
     Alert,
     AuditRow,
+    ChecklistItem,
     Delivery,
     Directive,
     PastEvent,
@@ -339,6 +340,13 @@ class Repo:
     def list_directives(self, village_id: str) -> list[Directive]:
         items = self._query(f"VILLAGE#{village_id}", "DIRECTIVE#", newest_first=True)
         return [_model(Directive, i) for i in items]
+
+    # -- early-action checklist -------------------------------------------
+    def put_checklist_item(self, c: ChecklistItem) -> None:
+        self._put({"pk": f"VILLAGE#{c.village_id}", "sk": f"CHECKLIST#{c.item}", **c.model_dump()})
+
+    def list_checklist(self, village_id: str) -> list[ChecklistItem]:
+        return [_model(ChecklistItem, i) for i in self._query(f"VILLAGE#{village_id}", "CHECKLIST#")]
 
     # -- alerts ----------------------------------------------------------
     def put_alert(self, a: Alert) -> None:
