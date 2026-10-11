@@ -163,6 +163,9 @@ Resources:
   StateMachineLogGroup:
     Type: AWS::Logs::LogGroup
     Properties: { LogGroupName: !Sub "/aws/vendedlogs/states/pukaar-approval-${Stage}", RetentionInDays: 30 }
+  GaugeIngestLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties: { LogGroupName: !Sub "/aws/lambda/pukaar-gauge-ingest-${Stage}", RetentionInDays: 30 }
 
   # ---------------------------------------------------------------- functions
   # Each function gets its own SAM-generated role from its Policies list (SAM adds
@@ -403,6 +406,110 @@ Resources:
               Condition:
                 StringEquals: { kms:ViaService: !Sub "ssm.${AWS::Region}.amazonaws.com" }
                 ForAnyValue:StringEquals: { kms:ResourceAliases: alias/aws/ssm }
+
+  # ---------------------------------------------------------------- river gauges (AWS IoT Core)
+  # A gauge connects over MQTT with its own X.509 certificate (scripts/iot_provision.py makes one
+  # thing and one certificate per device) and publishes to pukaar/gauge/<village>/<device>/reading.
+  # The topic rule adds the two topic parts and invokes the ingest Lambda, which stores the reading
+  # through the same gauge service as the HTTPS route.
+  GaugeIngestFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      Dockerfile: backend/Dockerfile
+      DockerContext: ..
+      DockerTag: worker
+      DockerBuildTarget: worker
+    Properties:
+      PackageType: Image
+      FunctionName: !Sub pukaar-gauge-ingest-${Stage}
+      MemorySize: 512
+      # A reading at watch or above re-runs the village's rules, which may start an approval.
+      Timeout: 60
+      ImageConfig: { Command: [Pukaar.handlers.gauge_ingest.handler] }
+      LoggingConfig: { LogGroup: !Ref GaugeIngestLogGroup }
+      Environment:
+        Variables:
+          PUKAAR_API_URL: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com"
+      # IoT invokes asynchronously. A reading that cannot be stored is returned as rejected (no
+      # retry); an exception (storage down) goes straight to the DLQ: the next reading is a minute away.
+      EventInvokeConfig:
+        MaximumRetryAttempts: 0
+        DestinationConfig:
+          OnFailure: { Type: SQS, Destination: !GetAtt WorkerDLQ.Arn }
+      # The same rights as the sweep: a rising gauge re-evaluates the village exactly as a sweep does.
+      Policies:
+        - DynamoDBCrudPolicy: { TableName: !Ref Table }
+        - S3CrudPolicy: { BucketName: !Ref Bucket }
+        - Statement:
+            - Sid: Polly
+              Effect: Allow
+              Action: polly:SynthesizeSpeech
+              # SynthesizeSpeech only scopes to lexicons; Pukaar uses none.
+              Resource: "*"
+            - Sid: StartApproval
+              Effect: Allow
+              Action: states:StartExecution
+              Resource: !Sub arn:${AWS::Partition}:states:${AWS::Region}:${AWS::AccountId}:stateMachine:pukaar-approval-${Stage}
+
+  PukaarGaugeRule:
+    Type: AWS::IoT::TopicRule
+    Properties:
+      # Rule names allow letters, digits and underscores only.
+      RuleName: !Join ["_", !Split ["-", !Sub "pukaar_gauge_${Stage}"]]
+      TopicRulePayload:
+        Description: River-gauge readings to the Pukaar gauge-ingest Lambda.
+        AwsIotSqlVersion: "2016-03-23"
+        Sql: "SELECT *, topic(3) AS village_id, topic(4) AS device_id FROM 'pukaar/gauge/+/+/reading'"
+        RuleDisabled: false
+        Actions:
+          - Lambda: { FunctionArn: !GetAtt GaugeIngestFunction.Arn }
+        ErrorAction:
+          Sqs: { QueueUrl: !Ref WorkerDLQ, RoleArn: !GetAtt GaugeRuleErrorRole.Arn, UseBase64: false }
+
+  GaugeRuleInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt GaugeIngestFunction.Arn
+      Action: lambda:InvokeFunction
+      Principal: iot.amazonaws.com
+      SourceAccount: !Ref AWS::AccountId
+      SourceArn: !GetAtt PukaarGaugeRule.Arn
+
+  # Used by the rule's error action only: when IoT cannot invoke the Lambda, the message goes to the DLQ.
+  GaugeRuleErrorRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal: { Service: iot.amazonaws.com }
+            Action: sts:AssumeRole
+            Condition: { StringEquals: { aws:SourceAccount: !Ref AWS::AccountId } }
+      Policies:
+        - PolicyName: gauge-rule-errors-to-dlq
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action: sqs:SendMessage
+                Resource: !GetAtt WorkerDLQ.Arn
+
+  # Attached to each gauge's certificate. A device may connect only with its own thing name as
+  # the client id (and only while the certificate is attached to that thing), and publish only
+  # to its own reading topic. It cannot subscribe, receive, or touch any other device's topic.
+  PukaarGaugePolicy:
+    Type: AWS::IoT::Policy
+    Properties:
+      PolicyName: !Sub pukaar-gauge-${Stage}
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action: iot:Connect
+            Resource: !Sub "arn:${AWS::Partition}:iot:${AWS::Region}:${AWS::AccountId}:client/${!iot:Connection.Thing.ThingName}"
+            Condition: { Bool: { "iot:Connection.Thing.IsAttached": "true" } }
+          - Effect: Allow
+            Action: iot:Publish
+            Resource: !Sub "arn:${AWS::Partition}:iot:${AWS::Region}:${AWS::AccountId}:topic/pukaar/gauge/*/${!iot:Connection.Thing.ThingName}/reading"
 
   # ---------------------------------------------------------------- schedule
   SweepScheduleRole:
@@ -780,3 +887,8 @@ Outputs:
     Value: !Ref ApprovalStateMachine
   AlarmTopicArn:
     Value: !Ref AlarmTopic
+  GaugePolicyName:
+    Description: IoT policy attached to each gauge certificate (scripts/iot_provision.py)
+    Value: !Ref PukaarGaugePolicy
+  GaugeTopicRuleName:
+    Value: !Ref PukaarGaugeRule
