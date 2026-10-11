@@ -533,8 +533,7 @@ svg.lucide { width: 1.15em; height: 1.15em; flex: none; stroke-width: 2.2; displ
 .map-wrap > .map { position: absolute; inset: 0; }
 .map-skel { position: absolute; inset: 0; border-radius: 0; }
 .map-fail { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: var(--s-5); background: var(--surface-2); color: var(--ink-2); font-weight: 600; }
-:root[data-theme='dark'] .maplibregl-canvas { filter: invert(0.9) hue-rotate(200deg) brightness(0.9) saturate(0.35) contrast(0.9); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme='light']) .maplibregl-canvas { filter: invert(0.9) hue-rotate(200deg) brightness(0.9) saturate(0.35) contrast(0.9); } }
+/* Dark mode darkens the base raster only, in VillageMap (applyBaseTheme), so the route glow keeps its colour. */
 .maplibregl-ctrl-group button { width: 44px !important; height: 44px !important; }
 .maplibregl-ctrl-attrib { font-size: 11px; }
 .mk-host { z-index: 1; }
