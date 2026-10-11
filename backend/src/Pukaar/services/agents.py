@@ -403,7 +403,15 @@ def trace_rounds(a: Alert, timeline_steps: list[tuple[str, str]]) -> list[dict[s
         af.append(_f("Decided at", "फ़ैसले का समय", a.decided_at))
     pending = a.status in {"drafting", "pending"}
     state = "pending" if pending else ("ok" if a.approved or a.status == "auto_sent_unapproved" else "skipped")
-    add("approve", "person", "A person decided", "इंसान ने फ़ैसला किया", "Step Functions waitForTaskToken · Cognito · Cedar",
+    if pending:
+        title = ("Waiting for an officer", "अधिकारी का इंतज़ार")
+    elif a.status == "auto_sent_unapproved":
+        title = ("No answer: critical sent, flagged", "जवाब नहीं: गंभीर चेतावनी गई, निशान के साथ")
+    elif a.approved:
+        title = ("An officer approved", "अधिकारी ने मंज़ूरी दी")
+    else:
+        title = ("Not approved: nothing sent", "मंज़ूरी नहीं: कुछ नहीं भेजा")
+    add("approve", "person", *title, "Step Functions waitForTaskToken · Cognito · Cedar",
         state, af, "Agents can never approve (Cedar forbid).", "एजेंट कभी मंज़ूरी नहीं दे सकते (Cedar मनाही)।")
 
     # 6. delivery
@@ -418,7 +426,8 @@ def trace_rounds(a: Alert, timeline_steps: list[tuple[str, str]]) -> list[dict[s
         dstate = "skipped"
     else:
         dstate = "pending" if pending or a.status in {"approved", "delivering"} else "skipped"
-    add("deliver", "system", "Spoken alert sent", "बोली गई चेतावनी भेजी", "Polly (Kajal, hi-IN) · Telegram", dstate,
+    dtitle = ("Spoken alert sent", "बोली गई चेतावनी भेजी") if dstate == "ok" else ("Spoken alert", "बोली गई चेतावनी")
+    add("deliver", "system", *dtitle, "Polly (Kajal, hi-IN) · Telegram", dstate,
         dfacts, "Replays go to the stub channel only." if a.replay else "",
         "रीप्ले सिर्फ़ नकली चैनल पर जाते हैं।" if a.replay else "")
     return rounds
