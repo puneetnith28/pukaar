@@ -20,6 +20,23 @@ Built for Environmental Hacks (WeMakeDevs x AWS), Heat and Water track.
 |---|---|---|
 | ![Landing page](docs/screens/landing-1440-dark.png) | ![Officer console during a replay](docs/screens/console-1440-light.png) | ![Hindi-first report page](docs/screens/report-390-light.png) |
 
+## At a glance
+
+What is live on the deployed stack today, and how each piece was checked. Every row links to the page where you can see it.
+
+| | What | Checked live |
+|---|---|---|
+| **Agent-first** | Five agents with their tools, what each may never do (read from the Cedar policies), live status and a round-by-round trace of a real alert: [/agents](https://main.d15r7ktz99l46x.amplifyapp.com/agents). **Bedrock Guardrails** screen every villager report before any agent sees it | A prompt-injection report was held by Bedrock Guardrails (`prompt_attack`, `instruction_to_system`) on 11 Oct 2026 |
+| **Sensor-first** | River gauges over **AWS IoT Core** (MQTT, one X.509 certificate per device, policy pinned to its own topic), a topic rule into an ingest Lambda, the gauge as a third evidence source; virtual staff gauges from photos; thresholds learned from each gauge's own record: [/sensors](https://main.d15r7ktz99l46x.amplifyapp.com/sensors) | Labelled simulated readings over MQTT raised Gohar from Normal to Watch to Warning through IoT Core |
+| **The loop** | Rules set the level, an officer approves in one tap (Step Functions), Polly speaks the Hindi alert, Telegram delivers it, "मिल गया" confirms it, a re-send goes to anyone who has not | Approval, delivery, Polly MP3 and the time-to-ear stopwatch, on AWS |
+| **After the alert** | "Surakshit Hoon" safety roll-call with a privacy-safe family link; an after-action report for every alert (S3, SES) | Built; e-mail needs verified SES addresses |
+| **Where to go** | Named safe places from OpenStreetMap, slope-aware walking routes on real terrain, a shelter ledger the pradhan keeps, the nearest open place named in the alert | Built and deployed |
+| **Live** | **AppSync Events** pushes every level and alert change to open pages; polling is only the fallback | A level change reached the browser 75 ms after the API answered |
+| **Interoperable** | A **CAP 1.2** feed (the format of NDMA's SACHET), schema-checked against the OASIS XSD: [/cap/alerts.atom](https://362iqe4oae.execute-api.us-east-1.amazonaws.com/cap/alerts.atom) | Live |
+| **Honest evidence** | Research with sources, a back-test scored against reported floods with a source ablation, a soil-moisture modifier kept off because the back-test cannot justify it | [Research and evidence](#research-and-evidence) |
+
+The full plan, with what is still being built and what needs a partner (voice calls and SMS inside India, sending into SACHET), is in [docs/BUILD_PLAN.md](docs/BUILD_PLAN.md).
+
 ## The problem
 
 In the hill districts of Himachal Pradesh a mountain stream can become a
