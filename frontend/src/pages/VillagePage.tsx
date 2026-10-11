@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, BatteryMedium, ChevronDown, CloudRain, FileText, Gauge as GaugeIcon, History, Hourglass, ListChecks, MapPin, Megaphone, RadioTower, Scale, TrendingUp, Users, Waves } from 'lucide-react';
+import { ArrowLeft, BatteryMedium, ChevronDown, CloudRain, FileText, Gauge as GaugeIcon, HeartHandshake, History, Hourglass, ListChecks, MapPin, Megaphone, RadioTower, Scale, TrendingUp, Users, Waves } from 'lucide-react';
 import { api } from '../api';
 import { AlertStatusChip, DeliveryChips, ReplayChip, ReportStateChip } from '../components/Chips';
 import { Gauge } from '../components/Gauge';
@@ -19,7 +19,7 @@ import { auditLinkForAlert } from '../lib/audit';
 import { holdLine } from '../lib/evidence';
 import { humanizeSummary } from '../lib/humanize';
 import { useAuth } from '../store';
-import type { Alert, DecisionTrace, GaugeView, Level, TraceEvidence, Village } from '../types';
+import type { Alert, DecisionTrace, GaugeView, Level, PublicRollCall, TraceEvidence, Village } from '../types';
 
 function AlertDetails({ alert }: { alert: Alert }) {
   const { t, lang } = useT();
@@ -106,6 +106,25 @@ function AlertCard({ alert, signedIn }: { alert: Alert; signedIn: boolean }) {
         </>
       )}
     </li>
+  );
+}
+
+/** An open "Surakshit Hoon" roll-call: counts only, never names. */
+function RollCallCount({ rc }: { rc: PublicRollCall }) {
+  const { t } = useT();
+  return (
+    <section aria-labelledby="rcv-h" className={`rc-public${rc.need_help > 0 ? ' has-help' : ''}`}>
+      <h2 id="rcv-h" className="h-sec">
+        <HeartHandshake aria-hidden="true" /> {t('rollcall.title')}
+        {rc.exercise && <span className="chip chip-warn">{t('rollcall.exercise')}</span>}
+      </h2>
+      <p className="rc-public-line" role="status">
+        {t(rc.need_help === 1 ? 'rollcall.public.one' : 'rollcall.public.many', { s: rc.safe, h: rc.need_help })}
+      </p>
+      <p className="small muted">
+        {t('rollcall.public.waiting', { n: rc.not_answered })} · {t('rollcall.public.lead')}
+      </p>
+    </section>
   );
 }
 
@@ -373,6 +392,7 @@ export default function VillagePage() {
       </section>
 
       <div className="wrap v-body">
+        {data.rollcall?.open && <RollCallCount rc={data.rollcall} />}
         {(data.directives ?? []).filter((d) => d.active).length > 0 && (
           <section aria-labelledby="dir-h">
             <h2 id="dir-h" className="h-sec">

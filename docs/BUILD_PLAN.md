@@ -153,5 +153,5 @@ Sources and verdicts: the research summary in [REFERENCE_REVIEW.md](REFERENCE_RE
 | 14 | Sensors page and device path | 2 | building |
 | 15 | Antecedent soil moisture | 2 | building |
 | 16 | Two-stage readiness and checklists | 2 | building |
-| 17 | "Surakshit Hoon" roll-call | 2 | building |
+| 17 | "Surakshit Hoon" roll-call | 2 | built on a branch, tested offline; not deployed |
 | 18 | Virtual staff gauges | 3 | planned |

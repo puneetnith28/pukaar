@@ -310,6 +310,69 @@ export interface VillageDetail extends SampleFlag {
   nowcast: Nowcast | null;
   directives?: Directive[];
   gauge?: GaugeView | null;
+  /** An open safety roll-call: counts only, never names. */
+  rollcall?: PublicRollCall | null;
+}
+
+/** "Surakshit Hoon" safety roll-call, public shape: counts only. */
+export interface PublicRollCall {
+  open: boolean;
+  exercise: boolean;
+  asked: number;
+  safe: number;
+  need_help: number;
+  not_answered: number;
+  opened_at: string;
+  closes_at: string;
+}
+
+export interface RollCall extends SampleFlag {
+  id: string;
+  village_id: string;
+  village_name: string;
+  village_name_hi: string;
+  alert_id: string | null;
+  level: Level | null;
+  opened_at: string;
+  closes_at: string;
+  opened_by: 'system' | 'officer';
+  opened_by_user: string | null;
+  exercise: boolean;
+  asked: number;
+  safe: number;
+  need_help: number;
+  not_answered: number;
+  open: boolean;
+  last_reminded_at: string | null;
+  reminders: number;
+}
+
+/** Officer board: names and times only (no phone numbers or chat ids). */
+export interface RollCallBoard extends SampleFlag {
+  rollcall: RollCall;
+  need_help: { name: string; at: string; note: string | null; simulated: boolean }[];
+  safe: { name: string; at: string; simulated: boolean }[];
+  not_answered: { name: string; demo: boolean; asked_at: string; reminded_at: string | null; failed: boolean }[];
+  remind_every_seconds: number;
+}
+
+export interface RollCallRemind {
+  reminded: number;
+  waiting: number;
+  demo_without_phone: number;
+  last_reminded_at: string | null;
+  board: RollCallBoard;
+}
+
+/** GET /safe/{token}: what a family link shows. */
+export interface SafeView extends SampleFlag {
+  first_name: string | null;
+  village_name: string;
+  village_name_hi: string;
+  at: string;
+  status: 'safe';
+  exercise: boolean;
+  simulated: boolean;
 }
 
 export interface AlertDetail extends SampleFlag {
@@ -412,6 +475,7 @@ export interface PublicVillage {
   lon: number;
   level: Level;
   coords_verified: boolean;
+  rollcall?: PublicRollCall | null;
 }
 
 export interface PublicAlert {
