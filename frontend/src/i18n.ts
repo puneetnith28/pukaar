@@ -489,6 +489,13 @@ export const dict = {
     hi: 'यह चेतावनी CAP 1.2 रूप में (सचेत जैसे सिस्टम के लिए मशीन से पढ़ने योग्य)',
     en: 'This alert as CAP 1.2 (machine-readable, for SACHET and other aggregators)',
   },
+  'console.aar.open': { hi: 'कार्रवाई के बाद की रिपोर्ट ↗', en: 'After-action report ↗' },
+  'console.aar.title': {
+    hi: 'समय-रेखा, मंज़ूरी, किस तक पहुँचा, "मिल गया" और ऑडिट: नए टैब में खुलेगी',
+    en: 'Timeline, approvals, deliveries, acknowledgements and audit: opens in a new tab',
+  },
+  'console.aar.download': { hi: 'डाउनलोड', en: 'Download' },
+  'console.aar.error': { hi: 'रिपोर्ट नहीं खुल सकी।', en: 'Could not load the report.' },
   'console.alerts.recent': { hi: 'हाल की चेतावनियाँ', en: 'Recent alerts' },
   'console.tab.queue': { hi: 'गाँव', en: 'Villages' },
   'console.tab.approvals': { hi: 'मंज़ूरी', en: 'Approvals' },

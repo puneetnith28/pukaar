@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { TimeToEar } from '../../components/TimeToEar';
 import { Link, Navigate, useLocation } from 'react-router-dom';
-import { Bell, ChevronDown, Cloud, FileText, HeartHandshake, History, LayoutList, Megaphone, MonitorCog, ScrollText, Send, Server, Sparkles } from 'lucide-react';
-import { api, API_BASE } from '../../api';
+import { Bell, ChevronDown, Cloud, Download, FileText, HeartHandshake, History, LayoutList, Megaphone, MonitorCog, ScrollText, Send, Server, Sparkles } from 'lucide-react';
+import { api, API_BASE, ApiError } from '../../api';
 import { AlertStatusChip, DeliveryChips } from '../../components/Chips';
 import { LevelBadge } from '../../components/Level';
 import { Call112 } from '../../components/Shell';
 import { usePoll } from '../../hooks/usePoll';
 import { useT } from '../../i18n';
+import { afterActionFilename, hasAfterAction } from '../../lib/afterAction';
 import { auditLinkForAlert } from '../../lib/audit';
 import { capXmlUrl } from '../../lib/cap';
 import { fmtAgo, fmtTime } from '../../lib/format';
@@ -257,6 +258,7 @@ function RecentAlert({ alert: a, showAudit }: { alert: Alert; showAudit: boolean
           </>
         )}
       </p>
+      {hasAfterAction(a) && <AfterActionLinks alert={a} />}
       {sent && (
         <>
           <button type="button" className="trace-toggle" aria-expanded={open} onClick={() => setOpen((o) => !o)}>
@@ -267,6 +269,63 @@ function RecentAlert({ alert: a, showAudit }: { alert: Alert; showAudit: boolean
         </>
       )}
     </li>
+  );
+}
+
+/**
+ * The alert's after-action report (GET /alerts/{id}/after-action). The route needs the sign-in
+ * token, which a plain link cannot carry, so the page is fetched and shown from a blob URL. The
+ * report is static HTML with a CSP that runs no script.
+ */
+function AfterActionLinks({ alert: a }: { alert: Alert }) {
+  const { t, lang } = useT();
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+
+  const run = async (mode: 'open' | 'download') => {
+    setErr(null);
+    setBusy(true);
+    // Open the tab inside the click so pop-up blockers allow it; fill it when the report arrives.
+    const win = mode === 'open' ? window.open('', '_blank') : null;
+    try {
+      const blob = await api.afterAction(a.id);
+      const url = URL.createObjectURL(new Blob([blob], { type: 'text/html;charset=utf-8' }));
+      if (win) {
+        win.opener = null;
+        win.location.href = url;
+      } else {
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = afterActionFilename(a);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      }
+      window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
+    } catch (e) {
+      win?.close();
+      setErr(e instanceof ApiError ? (lang === 'hi' && e.messageHi) || e.messageEn : t('console.aar.error'));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <p className="small aar-links">
+      <button type="button" className="link-btn" disabled={busy} title={t('console.aar.title')} onClick={() => void run('open')}>
+        <FileText aria-hidden="true" /> {t('console.aar.open')}
+      </button>
+      {' · '}
+      <button type="button" className="link-btn" disabled={busy} onClick={() => void run('download')}>
+        <Download aria-hidden="true" /> {t('console.aar.download')}
+      </button>
+      {err && (
+        <span className="bad-text" role="alert">
+          {' '}
+          {err}
+        </span>
+      )}
+    </p>
   );
 }
 
