@@ -33,6 +33,7 @@ import { usePoll } from '../hooks/usePoll';
 import { useT } from '../i18n';
 import { fmtAgo } from '../lib/format';
 import type { AgentCard, AgentRegistry, AgentState, AgentTrace, TraceKind, TraceRound } from '../types';
+import { ValleyLine } from '../components/Art';
 
 type Txt = { hi: string; en: string };
 const GITHUB = 'https://github.com/Prashant-thakur77/pukaar';
@@ -286,7 +287,7 @@ function TraceView({ trace }: { trace: AgentTrace }) {
                 <span className={`ag-actor by-${r.actor}`}>{ACTOR[r.actor][lang]}</span>
                 <span className={`ag-rstate is-${r.state}`}>{ROUND_STATE[r.state][lang]}</span>
               </div>
-              <h4 className="ag-round-title">{en ? r.title_en : r.title_hi}</h4>
+              <h3 className="ag-round-title">{en ? r.title_en : r.title_hi}</h3>
               <span className="how-aws ag-round-aws" translate="no">
                 {r.aws}
               </span>
@@ -604,6 +605,7 @@ export default function Agents() {
             </Ext>
           </div>
         </div>
+        <ValleyLine className="cta-valley" />
       </section>
     </div>
   );

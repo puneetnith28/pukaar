@@ -43,7 +43,14 @@ In the hill districts of Himachal Pradesh a mountain stream can become a
 flood within hours, often at night. On the night of 30 June to 1 July 2025,
 cloudbursts struck Mandi district; early official figures were at least 10
 people dead and 34 missing
-([Down To Earth](https://www.downtoearth.org.in/natural-disasters/cloudbursts-devastate-himachals-mandi-at-least-10-dead-34-missing-after-1900-excess-rain-on-july-1)).
+([Down To Earth](https://www.downtoearth.org.in/natural-disasters/cloudbursts-devastate-himachals-mandi-at-least-10-dead-34-missing-after-1900-excess-rain-on-july-1));
+by 9 July the count was 15 dead and 27 still missing
+([PTI](https://www.theweek.in/wire-updates/national/2025/07/09/des92-hp-calamity-cm-thakur.html)).
+In Syathi village, Dharampur, no report says any warning reached the village: a family's dog woke
+them around midnight and more than 60 people got out before the slope came
+down ([The Tribune](https://www.tribuneindia.com/news/himachal/pet-dog-emerges-saviour-in-mandi-village-saves-60-lives-amid-monsoon-fury)).
+In December 2023 Himachal had 1 of India's 338 Central Water Commission flood-forecasting
+stations ([CWC Statistical Report 2023](https://cwc.gov.in/sites/default/files/flood-management-india-statistical-report-2023.pdf), Table 2).
 
 Forecasts exist, but they are numbers on a website, not a warning a villager
 hears. Even when an official sees the danger in time, there is no quick way to
@@ -67,12 +74,12 @@ Try it in two minutes: open the [live page](https://main.d15r7ktz99l46x.amplifya
 
 **Early warning works, when it reaches people.**
 - Countries with less comprehensive multi-hazard early warning systems have a disaster-related mortality ratio "nearly six times higher" than countries with substantial to comprehensive coverage, and "nearly four times more disaster-affected people" ([WMO, *Global Status of MHEWS 2024*](https://wmo.int/publication-series/global-status-of-multi-hazard-early-warning-systems-2024)).
-- "Just 24 hours warning of a coming storm or heat wave can cut the ensuing damage by 30 percent", and early warning systems "save lives and assets worth at least ten times their cost" ([Global Commission on Adaptation, *Adapt Now*, 2019, p.13](https://gca.org/wp-content/uploads/2019/09/GlobalCommission_Report_FINAL.pdf)).
+- "Just 24 hours warning of a coming storm or heat wave can cut the ensuing damage by 30 percent", and early warning systems "save lives and assets worth at least ten times their cost" ([Global Commission on Adaptation, *Adapt Now*, 2019, p.14](https://gca.org/wp-content/uploads/2019/09/GlobalCommission_Report_FINAL.pdf)).
 - The UN's [Early Warnings for All](https://www.un.org/en/climatechange/early-warnings-for-all) initiative aims to protect everyone on Earth with early warning systems by the end of 2027.
 
 **The last mile is where warnings fail.** The research Pukaar is built on:
-- "A warning cannot be considered effective until it is received, understood and responded to by those at risk." In the same study, communities "strongly preferred voice short messaging service (SMS) and interactive voice response (IVR) because of easier accessibility and understanding of the message" (Cumiskey et al., 2015, *Int. J. Disaster Resilience in the Built Environment* 6(1), [doi:10.1108/IJDRBE-08-2014-0062](https://doi.org/10.1108/IJDRBE-08-2014-0062)). This is why Pukaar speaks the alert and asks for "मिल गया".
-- "Early warnings do not always translate into an emergency response from all individuals at risk" (Perera et al., 2020, *IJDRR* 50, [doi:10.1016/j.ijdrr.2020.101794](https://doi.org/10.1016/j.ijdrr.2020.101794)).
+- "A warning cannot be considered effective until it is received, understood and responded to by those at risk." In the same study (flood-prone Sunamganj district, Bangladesh, where about a third could read), communities "strongly preferred voice short messaging service (SMS) and interactive voice response (IVR) because of easier accessibility and understanding of the message" (Cumiskey et al., 2015, *Int. J. Disaster Resilience in the Built Environment* 6(1), [doi:10.1108/IJDRBE-08-2014-0062](https://doi.org/10.1108/IJDRBE-08-2014-0062)). This is why Pukaar speaks the alert and asks for "मिल गया".
+- "Early warnings do not always translate into an emergency response from all individuals at risk" (Perera et al., 2020, *IJDRR* 51, [doi:10.1016/j.ijdrr.2020.101794](https://doi.org/10.1016/j.ijdrr.2020.101794)).
 - People-centred systems need local knowledge, a move "from the traditional expert-driven approach to one … driven by the vulnerable communities" (Baudoin et al., 2016, *Int. J. Disaster Risk Science*, [doi:10.1007/s13753-016-0085-6](https://doi.org/10.1007/s13753-016-0085-6); Hermans et al., 2022, *Natural Hazards*, [doi:10.1007/s11069-022-05468-8](https://doi.org/10.1007/s11069-022-05468-8)). This is why a verified villager report can raise a level on its own.
 - Integrating crowdsourced observations improves flood forecasts in model studies (Mazzoleni et al., 2018, *HESS* 22, [doi:10.5194/hess-22-391-2018](https://doi.org/10.5194/hess-22-391-2018); their citizen observations were synthetic).
 
