@@ -625,6 +625,26 @@ export interface TelegramLink extends SampleFlag {
   expires_in_seconds: number;
 }
 
+/** GET /push/vapid-public-key: the applicationServerKey (null until `make vapid-keys` ran). */
+export interface VapidKey {
+  key: string | null;
+  configured: boolean;
+}
+
+/** One of the signed-in user's Web Push subscriptions (never the endpoint or keys). */
+export interface PushSubscriptionView {
+  id: string;
+  user_agent: string;
+  created_at: string;
+  last_sent_at: string | null;
+}
+
+export interface PushTestResult {
+  sent: number;
+  failed: number;
+  removed: number;
+}
+
 export interface ReplayStatus extends SampleFlag {
   active: boolean;
   /** True when the replay worker stopped updating. */

@@ -50,6 +50,7 @@ DENY_HINTS = {
     "set_gauge_thresholds": "Only a district officer can change a gauge's thresholds.",
     "manage_staff_gauge": "Only a district officer, or the pradhan of this village, can set up its staff gauge.",
     "confirm_staff_reading": "Only a district officer can confirm a staff gauge reading.",
+    "subscribe_push": "Only a signed-in officer or pradhan can get approval alerts on a phone.",
 }
 
 

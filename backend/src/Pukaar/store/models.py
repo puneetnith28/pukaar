@@ -439,3 +439,19 @@ class RollCallResponse(BaseModel):
     note: str | None = None  # optional free text (140 chars at most) sent after "need help"
     share_id: str | None = None  # opaque id behind the family link, so no chat id is in the link
     simulated: bool = False  # set only by tests and demo tooling for stub recipients, never by a real tap
+
+
+class PushSubscription(BaseModel):
+    """A browser's Web Push subscription for one signed-in officer or pradhan (services/officer_push.py).
+
+    id is derived from the endpoint, so the same browser subscribing again replaces its own row.
+    """
+
+    id: str
+    username: str
+    endpoint: str
+    p256dh: str  # the browser's P-256 public key, base64url
+    auth: str  # the browser's 16-byte auth secret, base64url
+    created_at: str
+    user_agent: str = ""  # a short summary such as "Chrome on Android", never the full header
+    last_sent_at: str | None = None

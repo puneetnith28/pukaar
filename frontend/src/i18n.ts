@@ -348,6 +348,32 @@ export const dict = {
   'console.tg.lead': { hi: 'एक बार का कोड बनाएँ और यह संदेश Pukaar बॉट को भेजें।', en: 'Make a one-time code and send this command to the Pukaar bot.' },
   'console.tg.make': { hi: 'कोड बनाएँ', en: 'Get my code' },
   'console.tg.expires': { hi: '{m} मिनट में समाप्त', en: 'Expires in {m} min' },
+  'console.push': { hi: 'इस फ़ोन पर मंज़ूरी की सूचना पाएँ', en: 'Get approval alerts on this phone' },
+  'console.push.lead': {
+    hi: 'कंसोल बंद हो तब भी सूचना आएगी। सूचना में ही मंज़ूर या नहीं दबाएँ।',
+    en: 'Alerts arrive even with the console closed. Tap Approve or Decline right in the notification.',
+  },
+  'console.push.on': { hi: 'चालू: यह फ़ोन मंज़ूरी की सूचनाएँ पाएगा', en: 'On: this phone gets approval alerts' },
+  'console.push.off': { hi: 'इस फ़ोन पर बंद है', en: 'Off on this phone' },
+  'console.push.blocked': {
+    hi: 'ब्राउज़र ने सूचनाएँ रोकी हैं। इस साइट की सेटिंग में सूचनाएँ चालू करें, फिर पेज दोबारा खोलें।',
+    en: 'Blocked by the browser. Allow notifications in this site’s settings, then reopen the page.',
+  },
+  'console.push.unsupported': { hi: 'यह ब्राउज़र पुश सूचनाएँ नहीं ले सकता।', en: 'This browser cannot receive push notifications.' },
+  'console.push.ios': {
+    hi: 'iPhone और iPad पर पहले पुकार को होम स्क्रीन पर जोड़ें (शेयर → होम स्क्रीन पर जोड़ें), फिर वहीं से खोलकर यह चालू करें।',
+    en: 'On iPhone and iPad, add Pukaar to the Home Screen first (Share → Add to Home Screen), then open it from there and turn this on.',
+  },
+  'console.push.server_off': { hi: 'सर्वर पर पुश सूचनाएँ अभी चालू नहीं हैं।', en: 'Push alerts are not set up on the server yet.' },
+  'console.push.no_worker': {
+    hi: 'इस पेज पर ऑफ़लाइन वर्कर नहीं चल रहा। यह तैनात साइट पर चलता है।',
+    en: 'The offline worker is not running on this page. It runs on the deployed site.',
+  },
+  'console.push.turn_on': { hi: 'चालू करें', en: 'Turn on' },
+  'console.push.turn_off': { hi: 'बंद करें', en: 'Turn off' },
+  'console.push.test': { hi: 'जाँच सूचना भेजें', en: 'Send a test notification' },
+  'console.push.test_sent': { hi: 'जाँच सूचना भेजी गई: {n} फ़ोन', en: 'Test notification sent to {n} phone(s)' },
+  'console.push.phones': { hi: 'आपके खाते पर {n} फ़ोन', en: '{n} phone(s) on your account' },
   'approve.invalid': { hi: 'यह लिंक सही नहीं है', en: 'This link is not valid' },
   'approve.invalid.body': { hi: 'लिंक अधूरा या बदला हुआ है। संदेश में आया पूरा लिंक खोलें, या कंसोल से मंज़ूरी दें।', en: 'The link is broken or was changed. Open the full link from the message, or approve from the console.' },
 

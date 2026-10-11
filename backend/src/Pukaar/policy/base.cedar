@@ -182,6 +182,15 @@ permit (
   resource is Pukaar::Alert
 );
 
+@id("staff-own-push")
+@desc("Officers and pradhans turn on Web Push approval alerts for their own account, remove their own phones and send themselves a test notification.")
+permit (
+  principal,
+  action == Pukaar::Action::"subscribe_push",
+  resource is Pukaar::App
+)
+when { principal is Pukaar::Officer || principal is Pukaar::Pradhan };
+
 @id("pradhan-after-action-own-village")
 @desc("A pradhan reads the after-action report only for alerts in their own villages.")
 permit (
