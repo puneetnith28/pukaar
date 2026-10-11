@@ -24,6 +24,8 @@ import type {
   Me,
   PublicOverview,
   ReplayStatus,
+  PushSubscriptionView,
+  PushTestResult,
   Report,
   ReportState,
   RollCall,
@@ -37,6 +39,7 @@ import type {
   Stats,
   TelegramLink,
   TrackView,
+  VapidKey,
   NewStaffGauge,
   Village,
   VillageDetail,
@@ -225,6 +228,13 @@ export const api = {
   health: () => request<Health>('/health'),
   me: () => request<Me>('/me'),
   telegramLink: () => request<TelegramLink>('/me/telegram-link', { method: 'POST', body: {} }),
+  vapidKey: () => request<VapidKey>('/push/vapid-public-key', { auth: false }),
+  pushSubscriptions: () => request<PushSubscriptionView[]>('/me/push-subscriptions'),
+  addPushSubscription: (sub: PushSubscriptionJSON) =>
+    request<PushSubscriptionView>('/me/push-subscriptions', { method: 'POST', body: sub }),
+  removePushSubscription: (id: string) =>
+    request<{ ok: boolean; id: string }>(`/me/push-subscriptions/${enc(id)}`, { method: 'DELETE' }),
+  pushTest: () => request<PushTestResult>('/me/push-test', { method: 'POST', body: {} }),
   devLogin: (username: string) => request<DevLoginResponse>('/auth/dev-login', { method: 'POST', body: { username }, auth: false }),
 
   villages: () => request<Village[]>('/villages'),

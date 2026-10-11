@@ -39,6 +39,7 @@ Public routes (no token): `GET /health`, `GET /villages`, `GET /villages/{id}`, 
 `POST /sensors/{id}/readings` (river gauge, HMAC-signed body, see docs/hardware/README.md),
 `GET /cap/alerts.atom` and `GET /cap/alerts/{id}.xml` (CAP 1.2 feed of published alerts, XML),
 `GET /agents`, `GET /agents/traces?limit=5`, `GET /sensors` (read-only, no personal data),
+`GET /push/vapid-public-key` (the Web Push applicationServerKey; `{key: null, configured: false}` until `make vapid-keys`),
 `POST /auth/dev-login` (local only). Everything else needs an officer or
 pradhan token and passes `policy.guard.authorize()`.
 
@@ -92,6 +93,20 @@ GET  /health/deep            officer: one tiny model call
 GET  /me                     {username, role, village_ids}
 POST /me/telegram-link       officer: {} -> {code, command, expires_in_seconds}  (one-time; send the
                              command to the bot to receive approval links in Telegram)
+GET  /push/vapid-public-key  public: {key: base64url P-256 point | null, configured}
+GET  /me/push-subscriptions  officer or pradhan (Cedar subscribe_push): [{id, user_agent, created_at,
+                             last_sent_at}]  (own phones only; never the endpoint or keys)
+POST /me/push-subscriptions  PushSubscription.toJSON() {endpoint, keys{p256dh, auth}, expirationTime}
+                             -> {id, user_agent, created_at, last_sent_at}; id = first 24 hex of
+                             SHA-256(endpoint), so the same browser replaces its own row; endpoint must be
+                             https on a browser push service; 400 bad subscription, 503 push not set up
+DELETE /me/push-subscriptions/{id}  -> {ok, id}; 404 if not this user's
+POST /me/push-test           -> {sent, failed, removed}; 404 no subscription; 429 more than one a minute
+                             The approval push (ask_officer, live and drill alerts, never replay):
+                             {kind:"approval", title, body, tag: alert id, renotify, requireInteraction,
+                              actions[{action:"approve"|"decline", title}], data{url: /a/<token>,
+                              alert_id, token, drill}}; the service worker POSTs {decision} to
+                             /approval/{token}. 404/410 from the push service deletes the subscription.
 POST /auth/dev-login         local only: {username} -> {token, username, role}
 GET  /villages               [Village]
 GET  /villages/{id}          {village, readings[<=96], alerts[], reports[], past_events[PastEvent],
