@@ -395,7 +395,7 @@ export default function VillagePage() {
             </ul>
           </section>
         )}
-        <section aria-labelledby="why-h">
+        <section aria-labelledby="why-h" data-tour="why">
           <h2 id="why-h" className="h-sec">
             <GaugeIcon aria-hidden="true" /> {t('village.why')}
           </h2>
@@ -460,7 +460,7 @@ export default function VillagePage() {
           )}
         </section>
 
-        <section aria-labelledby="al-h">
+        <section aria-labelledby="al-h" data-tour="village-alerts">
           <h2 id="al-h" className="h-sec">
             {t('village.alerts')}
           </h2>
