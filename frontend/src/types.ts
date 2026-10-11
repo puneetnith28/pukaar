@@ -623,3 +623,151 @@ export interface Backtest {
   rules?: string;
   scenarios: BacktestScenario[];
 }
+
+/* ---- GET /agents, /agents/traces, /sensors (public, read-only) ---- */
+export type AgentState = 'live' | 'fallback' | 'pending' | 'deterministic' | 'unknown';
+
+export interface AgentStatus {
+  state: AgentState;
+  label_en: string;
+  label_hi: string;
+  evidence: string;
+}
+
+export interface AgentTool {
+  name: string;
+  description: string;
+  description_hi?: string;
+  read_only: boolean;
+  aws: string;
+}
+
+export interface AgentNever {
+  action: string;
+  en: string;
+  hi: string;
+  source: string;
+}
+
+export interface WatchFinding {
+  village_id: string;
+  kind: string; // stale | no_data | flatline | jump | battery
+  severity: string; // warn | info
+  at: string | null;
+  value: number | null;
+  message_en: string;
+  message_hi: string;
+}
+
+export interface AgentCard {
+  id: string;
+  name_en: string;
+  name_hi: string;
+  kicker: string;
+  role_en: string;
+  role_hi: string;
+  primitives: string[];
+  tools: AgentTool[];
+  output_fields: string[];
+  never: AgentNever[];
+  policies: { id: string; desc: string }[];
+  max_turns: number;
+  budget_seconds: number | null;
+  fallback_en: string;
+  fallback_hi: string;
+  access_en?: string;
+  access_hi?: string;
+  status: AgentStatus;
+  findings?: WatchFinding[];
+}
+
+export interface AgentRegistry {
+  generated_at: string;
+  model: { id: string; label: string; enabled: boolean; status: AgentStatus };
+  guardrail: { present: boolean; configured: boolean; status: AgentStatus };
+  agents: AgentCard[];
+  counters: {
+    agents: number;
+    read_only_tools: number;
+    cedar_policies: number;
+    tool_calls_today: number;
+    tool_calls_denied_today: number;
+    drafts: number;
+    drafts_by_model: number;
+    drafts_by_template: number;
+    watch_findings: number;
+  };
+}
+
+export type TraceKind = 'sense' | 'rules' | 'tools' | 'draft' | 'approve' | 'deliver';
+
+export interface TraceRound {
+  n: number;
+  kind: TraceKind;
+  actor: 'code' | 'agent' | 'template' | 'person' | 'system';
+  title_en: string;
+  title_hi: string;
+  aws: string;
+  state: 'ok' | 'fallback' | 'pending' | 'skipped' | 'deny';
+  facts: { en: string; hi: string; v: string | number }[];
+  note_en: string;
+  note_hi: string;
+}
+
+export interface AgentTrace {
+  alert_id: string;
+  village_id: string;
+  village_name: string;
+  village_name_hi: string;
+  level: Level;
+  previous_level: Level;
+  status: AlertStatus;
+  created_at: string;
+  replay: boolean;
+  drill: boolean;
+  reasoning_model: string;
+  rounds: TraceRound[];
+}
+
+export interface SensorReadingView {
+  at: string;
+  water_level_cm: number;
+  battery_v: number | null;
+  rssi: number | null;
+  simulated: boolean;
+  transport: string | null;
+  received_at: string | null;
+}
+
+export interface SensorVillage {
+  id: string;
+  name: string;
+  name_hi: string;
+  level: Level;
+  gauge: { device_id: string; watch_cm: number; warning_cm: number; critical_cm: number; installed: boolean };
+  latest: SensorReadingView | null;
+  age_minutes: number | null;
+  fresh: boolean;
+  gauge_level: Level | null;
+  readings_24h: number;
+  simulated: boolean;
+  series: { at: string; cm: number }[];
+  findings: WatchFinding[];
+}
+
+export interface SensorBoard {
+  generated_at: string;
+  window_start: string;
+  fresh_minutes: number;
+  readings_24h: number;
+  by_transport: Record<string, number>;
+  gauges: number;
+  fresh_gauges: number;
+  installed_gauges: number;
+  villages: SensorVillage[];
+  watch: {
+    checks: { kind: string; en: string; hi: string }[];
+    findings: WatchFinding[];
+    thresholds: { stale_minutes: number; flat_min_readings: number; jump_cm_per_min: number; low_battery_v: number };
+  };
+}

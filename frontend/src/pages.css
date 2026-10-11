@@ -386,11 +386,11 @@
 }
 
 /* Dark theme: lift the header band off the black page */
-:root[data-theme='dark'] :is(.pg-band, .village-page .v-hero, .impact-hero.band-night) { background: linear-gradient(180deg, #161c16 0%, #10130e 100%); border-bottom-color: rgb(79 179 255 / 0.22); }
+:root[data-theme='dark'] :is(.pg-band, .village-page .v-hero, .impact-hero.band-night) { background: linear-gradient(180deg, #0d2540 0%, #081828 100%); border-bottom-color: rgb(79 179 255 / 0.22); }
 :root[data-theme='dark'] .live-map.card { border-color: var(--line-2); }
 :root[data-theme='dark'] .pending-card.ticket { box-shadow: 0 18px 40px -28px rgb(0 0 0 / 0.8); }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) :is(.pg-band, .village-page .v-hero, .impact-hero.band-night) { background: linear-gradient(180deg, #161c16 0%, #10130e 100%); border-bottom-color: rgb(79 179 255 / 0.22); }
+  :root:not([data-theme='light']) :is(.pg-band, .village-page .v-hero, .impact-hero.band-night) { background: linear-gradient(180deg, #0d2540 0%, #081828 100%); border-bottom-color: rgb(79 179 255 / 0.22); }
   :root:not([data-theme='light']) .live-map.card { border-color: var(--line-2); }
   :root:not([data-theme='light']) .pending-card.ticket { box-shadow: 0 18px 40px -28px rgb(0 0 0 / 0.8); }
 }

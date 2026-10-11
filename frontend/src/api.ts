@@ -1,6 +1,8 @@
 // Typed client for every route in docs/CONTRACT.md.
 import { useAuth, useNet } from './store';
 import type {
+  AgentRegistry,
+  AgentTrace,
   Alert,
   AlertAudio,
   AlertDetail,
@@ -25,6 +27,7 @@ import type {
   RollCallBoard,
   RollCallRemind,
   SafeView,
+  SensorBoard,
   Stats,
   TelegramLink,
   TrackView,
@@ -231,6 +234,9 @@ export const api = {
     request<RollCallBoard>('/rollcalls', { method: 'POST', body: { village_id, exercise } }),
   remindRollcall: (id: string) => request<RollCallRemind>(`/rollcalls/${enc(id)}/remind`, { method: 'POST', body: {} }),
   safe: (token: string) => request<SafeView>(`/safe/${enc(token)}`, { auth: false }),
+  agents: () => request<AgentRegistry>('/agents', { auth: false }),
+  agentTraces: (limit = 5) => request<AgentTrace[]>(`/agents/traces?limit=${limit}`, { auth: false }),
+  sensors: () => request<SensorBoard>('/sensors', { auth: false }),
 };
 
 /** Static back-test results served by the web host, not the API. Null when absent. */

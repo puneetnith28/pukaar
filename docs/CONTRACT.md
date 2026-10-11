@@ -38,6 +38,7 @@ Public routes (no token): `GET /health`, `GET /villages`, `GET /villages/{id}`,
 `GET /track/{code}`, `GET /replay/status`, `GET /alerts/{id}/audio`, `GET /safe/{token}`,
 `POST /sensors/{id}/readings` (river gauge, HMAC-signed body, see docs/hardware/README.md),
 `GET /cap/alerts.atom` and `GET /cap/alerts/{id}.xml` (CAP 1.2 feed of published alerts, XML),
+`GET /agents`, `GET /agents/traces?limit=5`, `GET /sensors` (read-only, no personal data),
 `POST /auth/dev-login` (local only). Everything else needs an officer or
 pradhan token and passes `policy.guard.authorize()`.
 

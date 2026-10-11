@@ -593,6 +593,12 @@ export const dict = {
   },
   'soil.dry': { hi: '0 सूखा ({v})', en: '0 dry ({v})' },
   'soil.wet': { hi: '1 गीला ({v})', en: '1 wet ({v})' },
+  'nav.loop': { hi: 'पूरा चक्र', en: 'The loop' },
+  'nav.loop.sub': { hi: 'पूर्वानुमान से “मिल गया” तक सात क़दम', en: 'Seven steps from forecast to “मिल गया”' },
+  'nav.agents': { hi: 'एजेंट', en: 'Agents' },
+  'nav.agents.sub': { hi: 'क्या करते हैं, क्या कभी नहीं कर सकते', en: 'What they do, what they may never do' },
+  'nav.sensors': { hi: 'सेंसर', en: 'Sensors' },
+  'nav.sensors.sub': { hi: 'नदी के गेज से नियमों तक', en: 'From the river gauge to the rules' },
 } satisfies Record<string, Entry>;
 
 export type Key = keyof typeof dict;
