@@ -144,7 +144,7 @@ Sources and verdicts: the research summary in [REFERENCE_REVIEW.md](REFERENCE_RE
 | 5 | Safe places and routes | 2 | planned |
 | 6 | After-action email | 2 | planned |
 | 7 | Live push (AppSync Events) | 2 | planned |
-| 8 | Satellite before/after | 2 | planned |
+| 8 | Satellite before/after | 2 | built (Sentinel-2: 3 Jun, 23 Jul and 6 Sep 2023; split slider on /impact) |
 | 9 | SMS channel | 3 | blocked on owner action |
 | 10 | Voice call | 3 | planned (owner action may be needed) |
 | 11 | Web Push to officers | 3 | planned |

@@ -250,6 +250,7 @@ sign-in; the demo accounts are in [DEMO.md](DEMO.md).
 | Bedrock Guardrails screening of villager text (prompt attacks and orders to the system held for an officer, phone numbers masked, local heuristic fallback) | Built and tested offline with a scripted guardrail; in the template, not yet deployed. `ApplyGuardrail` was checked on this account on 11 Oct 2026 and blocks a prompt attack without model access, so it will be the first live Bedrock feature |
 | Ask Pukaar analyst agent | Built (falls back to a keyword router without a model) |
 | Replay and back-test on archived data | Built ([data/backtest.json](data/backtest.json)) |
+| Satellite before and after of the July 2023 Beas flood (Sentinel-2 L2A from AWS Open Data; true colour and MNDWI water index) | Built: a split slider on /impact. Before 3 June 2023 (0% cloud over the crop); after 23 July 2023 (16.7% cloud, 12 days after the peak) and 6 September 2023 (0%). Scenes picked by measured cloud over the crop, not by the tile figure; images baked once and committed, so the page makes no imagery requests. Not Sentinel-1 radar: optical was usable |
 | Antecedent soil moisture (root-zone saturation lowers the IMD rain bands by up to 30%) | Built and back-tested; **off by default**: it changed no scored outcome and its only new Warning is at a village we could not verify ([docs/SCORING.md](docs/SCORING.md#soil-moisture-modifier)) |
 | Two-stage readiness: a "get ready" outlook from the 7-day river forecast (never an alert, never a level) and a per-village early-action checklist ticked by the pradhan or an officer (Cedar-checked, audited) | Built |
 | Web app: landing, live map, officer console, village, report, track, approve, impact | Built (see `frontend/`) |
@@ -279,6 +280,10 @@ Only 4 village-events could be verified from published reporting, so read this a
 
 The three charts are built from [data/backtest.json](data/backtest.json) and the Gohar replay by [scripts/build_charts.py](scripts/build_charts.py); no number in them is typed by hand.
 
+**From space.** The same flood seen by Sentinel-2, from the head of Pandoh reservoir down to Mandi town: 3 June 2023 on the left, 23 July 2023 (12 days after the peak, the first look with under 25% cloud over the crop) on the right. The reservoir has turned from green-blue to brown silt and the river channel is wider and pale. On /impact this is a split slider with a water-index (MNDWI) view and a second, cloud-free after date (6 September 2023). Monsoon cloud means the after pictures are weeks later and include the river's seasonal rise, not only the flood. Baked by [scripts/build_satellite.py](scripts/build_satellite.py) from the cloud-optimised GeoTIFFs on AWS Open Data (Element 84 Earth Search); contains modified Copernicus Sentinel data 2023.
+
+![Sentinel-2 true colour over the Beas, Pandoh to Mandi: 3 June 2023 on the left, 23 July 2023 on the right](docs/charts/satellite-beas-2023.jpg)
+
 The replay runs archived hours through the same code. Rain is the archived
 forecast (Open-Meteo historical forecast API). Discharge is the archived
 GloFAS series from the Open-Meteo flood API.
@@ -306,6 +311,9 @@ Not yet measured:
   historical-forecast API for each village's 2024-2025 range and for the replays.
 - River discharge and its 1984-2024 history: Open-Meteo flood API (GloFAS).
 - Rain bands: India Meteorological Department 24-hour categories (64.5, 115.6 and 204.5 mm).
+- Satellite pictures: Sentinel-2 L2A cloud-optimised GeoTIFFs on AWS Open Data
+  (`s3://sentinel-cogs`), found with Element 84 Earth Search. Contains modified
+  Copernicus Sentinel data 2023.
 
 No populations, casualty figures or other numbers are invented. Unknown
 values stay empty.
