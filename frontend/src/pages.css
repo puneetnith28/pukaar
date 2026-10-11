@@ -111,9 +111,9 @@
 .state.has-word { gap: 10px; padding: var(--s-7) var(--s-4); }
 .state-word {
   margin: 0; font-family: var(--font-display); text-transform: uppercase; line-height: 0.9;
-  font-size: clamp(2.6rem, 5vw, 4rem); color: transparent; -webkit-text-stroke: 1.5px var(--line-2);
+  font-size: clamp(2.6rem, 5vw, 4rem); color: transparent; -webkit-text-stroke: 1.5px var(--word);
 }
-.state-word:lang(hi) { font-family: var(--font-hi); font-weight: 800; -webkit-text-stroke: 0; color: var(--line-2); }
+.state-word:lang(hi) { font-family: var(--font-hi); font-weight: 800; -webkit-text-stroke: 0; color: var(--word); }
 .state.has-word .state-title { font-family: var(--font-body); font-size: var(--fs-md); font-weight: 800; }
 .state.has-word .state-body { font-size: var(--fs-sm); }
 

@@ -1559,7 +1559,16 @@ button.map-key-item:hover { background: var(--surface-2); }
 .fact-text-en { color: #ffd9d0; }
 .fact a { color: #fff; }
 .thesis { background: var(--night-0); }
-.cta { background: var(--cream); }
+.cta { background: var(--cream); color: var(--ink); }
+/* The story and the closing call to action are paper bands in both themes: give them the light
+ * theme's ink, lines and level colours, so dark mode never puts pale text on the pale paper. */
+.cta, .story {
+  --bg: #f2f8fc; --surface: #ffffff; --surface-2: #f4f9fd; --surface-3: #e8f2f9;
+  --ink: #0b1f33; --ink-2: #284560; --ink-3: #557089; --line: #d6e6f1; --line-2: #b9d3e5; --word: #728ba1;
+  --accent-text: #11679e; --focus: #1d7fc4;
+  --lv-normal-ink: #0f6443; --lv-normal-bg: #def5ea; --lv-watch-ink: #6b5000; --lv-watch-bg: #fff4c7;
+  --lv-warning-ink: #9a3a00; --lv-warning-bg: #ffe6d5; --lv-critical-ink: #9c0d2f; --lv-critical-bg: #ffdfe6;
+}
 
 /* ---------- EcoLafaek motion: 60px rise over 1s (power3-out), headings glide in from the side; film grain on dark bands ---------- */
 .reveal { transform: translateY(60px); transition: opacity 1s cubic-bezier(0.215, 0.61, 0.355, 1) var(--d, 0ms), transform 1s cubic-bezier(0.215, 0.61, 0.355, 1) var(--d, 0ms); }
