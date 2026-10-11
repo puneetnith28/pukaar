@@ -8,6 +8,10 @@ PY       ?= backend/.venv/bin/python
 PYTHON    = $(abspath $(PY))
 SAM      ?= sam
 STACK_ENV = eval "$$(scripts/stack_env.sh)"
+# sam's --parameter-overrides replaces samconfig's list, so read it and add the live-push key
+# expiry (now + 360 days; AppSync allows at most 365). Re-deploying extends the same key.
+SAM_PARAMS     = $(shell sed -n 's/^parameter_overrides = "\(.*\)"$$/\1/p' samconfig.toml)
+EVENTS_KEY_EXP = $(shell date -u -d '+360 days' +%s 2>/dev/null || date -u -v+360d +%s)
 
 .PHONY: help install test test-backend test-frontend lint build deploy deploy-web \
         seed reset-demo drill gauge-sim gauge-provision gauge-sim-mqtt ses-verify it secrets local validate
@@ -38,7 +42,7 @@ build: ## Build the Lambda images (needs Docker)
 	$(SAM) build
 
 deploy: build ## Deploy the stack, then publish the web app to Amplify
-	$(SAM) deploy
+	$(SAM) deploy --parameter-overrides $(SAM_PARAMS) EventsApiKeyExpires=$(EVENTS_KEY_EXP)
 	$(MAKE) deploy-web
 
 deploy-web: ## Build the front end against the stack and upload it to Amplify
