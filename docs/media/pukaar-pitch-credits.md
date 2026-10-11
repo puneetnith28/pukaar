@@ -16,8 +16,8 @@ Code: https://github.com/Prashant-thakur77/pukaar
 1:57 How it works
 2:48 After the alert
 3:02 Built on AWS
-3:25 What's next
-3:40 Close
+3:35 What's next
+4:06 Close
 ```
 
 ## Honesty notes

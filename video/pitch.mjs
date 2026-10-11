@@ -249,8 +249,8 @@ export const SCENES = (f) => [
     lead: 0.4,
     lines: [
       L("All of it is one serverless stack on AWS."),
-      L("EventBridge and Lambda, IoT Core, | DynamoDB, Step Functions,"),
-      L("Bedrock, Polly, Transcribe, | AppSync, Cognito, S3 and CloudWatch."),
+      L("EventBridge wakes Lambda every fifteen minutes, | IoT Core brings in the gauges, | DynamoDB keeps one record of truth, | and Step Functions holds each alert until an officer taps approve."),
+      L("Bedrock drafts behind Guardrails. | Polly speaks, Transcribe listens, | AppSync pushes it live, | Cognito signs officers in, | S3 keeps the audio, | and CloudWatch watches it all."),
     ],
     tail: 0.3,
   },
@@ -273,16 +273,17 @@ export const SCENES = (f) => [
     id: "next",
     chapter: "What's next",
     tag: "What's next",
-    lead: 0.5,
+    lead: 0.3,
     lines: [
-      L("Next: real gauges under the bridges, | and voice calls to basic phones, | in Hindi and Pahari."),
-      L("SMS for phones without internet, | and a direct link into India's national alert system."),
+      L("We keep building, every week. | The river-gauge path already runs on AWS IoT Core, | so a reading at the bridge can raise the alarm on its own."),
+      L("Next: IoT Core for LoRaWAN, | to reach bridges with no phone signal. | Greengrass, to sound a siren at the gauge itself. | And SageMaker, to learn each river's warning signs."),
       L(
-        `Then from ${f.villages} villages in Mandi, | to the Himalayan states, | and to Nepal.`,
-        `Then from ${sayInt(f.villages)} villages in Mandi, | to the Himalayan states, | and to Nepal.`,
+        `Then calls and SMS to basic phones, | India's national alert system, | and from ${f.villages} villages to the Himalaya and Nepal.`,
+        `Then calls and SMS to basic phones, | India's national alert system, | and from ${sayInt(f.villages)} villages to the Himalaya and Nepal.`,
       ),
+      L("This is not a weekend project for us. | We want to build it to scale, | until every village on a Himalayan river | hears its warning in time.", undefined, { pre: 0.4 }),
     ],
-    tail: 0.5,
+    tail: 0.3,
   },
   // ================================================================ 8 · close
   {

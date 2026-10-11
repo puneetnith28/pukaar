@@ -331,14 +331,15 @@ export function layersFor(id, c) {
       layers: [
         { type: "bg", style: "night" },
         { type: "valley", from: 0, to: dur, y: 760, opacity: 0.8, draw: 3 },
-        { type: "text", cls: "eyebrow", html: "What we want to build next", from: 0.1, to: dur, x: 150, y: 110, size: 26, anim: "rise" },
-        { type: "roadmap", from: 0, to: dur, x: 150, y: 190, w: 1600, items: [
-          { icon: "gauge", t: "Real gauges under the bridges", s: "ultrasonic river gauges on AWS IoT Core, owned by the panchayat", at: at(0) },
-          { icon: "phone", t: "Voice calls to basic phones", s: "in Hindi and Pahari, for phones without apps", at: ch(0, 1) },
-          { icon: "sms", t: "SMS for phones without internet", s: "", at: at(1) },
-          { icon: "link", t: "Into India's national alert system", s: "SACHET, over CAP 1.2", at: ch(1, 1) },
-          { icon: "map", t: `From ${f.villages} villages in Mandi to the Himalayan states, and Nepal`, s: "", at: at(2) },
+        { type: "text", cls: "eyebrow", html: "We keep building · what AWS adds next", from: 0.1, to: at(3) - 0.1, x: 150, y: 96, size: 26, anim: "rise" },
+        { type: "roadmap", from: 0, to: at(3) - 0.1, x: 150, y: 160, w: 1620, items: [
+          { icon: "gauge", t: "Built: river gauges on *AWS IoT Core*", s: "MQTT, one X.509 certificate per gauge; a reading at a danger mark raises the level by itself (simulated until hardware is installed)", at: at(0) },
+          { icon: "radio", t: "*AWS IoT Core for LoRaWAN*", s: "long-range radio for bridges with no phone signal", at: at(1) },
+          { icon: "chip", t: "*AWS IoT Greengrass* at the gauge", s: "a local siren that still works when the network is down", at: ch(1, 2) },
+          { icon: "chart", t: "*Amazon SageMaker* with *Amazon Timestream*", s: "every reading kept; each river's warning signs learned from its own record", at: ch(1, 3) },
+          { icon: "phone", t: "Calls and SMS to basic phones, India's national alert system (SACHET over CAP 1.2)", s: `*AWS End User Messaging* · *Amazon Location Service* for live routes · ${f.villages} villages to the Himalayan states and Nepal`, at: at(2) },
         ] },
+        { type: "text", html: "We want to build this *to scale*,\nuntil every village hears it *in time.*", from: at(3), to: dur, x: 150, y: 330, size: 104, stagger: 0.1 },
       ],
       sfx: [],
     };

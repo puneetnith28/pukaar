@@ -254,6 +254,9 @@
         sms: '<path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/>',
         link: '<path d="M10 14a4 4 0 005.7 0l3-3a4 4 0 00-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 00-5.7 0l-3 3a4 4 0 005.7 5.7l1-1"/>',
         map: '<path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>',
+        radio: '<circle cx="12" cy="13" r="2"/><path d="M12 15v7M8.5 9.5a5 5 0 017 0M5.6 6.6a9 9 0 0112.8 0"/>',
+        chip: '<rect x="7" y="7" width="10" height="10" rx="1.5"/><path d="M10 3v4M14 3v4M10 17v4M14 17v4M3 10h4M3 14h4M17 10h4M17 14h4"/>',
+        chart: '<path d="M4 20V4M4 20h16"/><path d="M7 15l4-4 3 3 5-6"/>',
       };
       const svgIcon = (k) => `<svg viewBox="0 0 24 24">${ICON[k] ?? ""}</svg>`;
       const LOGO = `<svg viewBox="0 0 64 64"><defs><linearGradient id="lg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8ad0ff"/><stop offset="1" stop-color="#1f8fd6"/></linearGradient></defs><rect width="64" height="64" rx="32" fill="url(#lg)"/><path d="M6 46 L20 30 L28 37 L38 24 L52 38 L58 33 L64 40 V64 H0Z" fill="#06111f" opacity=".85"/><path d="M0 52 Q16 46 32 52 T64 52 V64 H0Z" fill="#eaf4fb" opacity=".9"/></svg>`;
