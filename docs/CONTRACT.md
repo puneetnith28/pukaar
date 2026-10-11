@@ -96,8 +96,25 @@ POST /auth/dev-login         local only: {username} -> {token, username, role}
 GET  /villages               [Village]
 GET  /villages/{id}          {village, readings[<=96], alerts[], reports[], past_events[PastEvent],
                               directives[<=5 Directive], nowcast|null, gauge|null, soil: Soil,
-                              checklist: Checklist}
+                              checklist: Checklist, staff_gauges: {gauges[StaffGauge], readings[<=10]}}
                              nowcast = {likely_level, hours, text_en, text_hi}
+GET  /villages/{id}/gauge/proposal  officer (any) or pradhan (own village), Cedar view_gauge_proposal:
+                             {status: "ready"|"insufficient", basis{readings, days, used, excluded, simulated},
+                              current, proposed{watch_cm, warning_cm, critical_cm}, raw, percentiles,
+                              baseline_cm, adjustments[], curve[{p, cm}], daily[], faults[Fault], note_en, note_hi}
+                             (services/gauge_learn.py; never applied by the system)
+POST /villages/{id}/gauge/thresholds  officer only (Cedar set_gauge_thresholds): {watch_cm, warning_cm,
+                             critical_cm, from_proposal=true, note?} -> {current, previous}; 409
+                             proposal_changed when from_proposal and the values are not the current
+                             proposal (5 cm tolerance); audit row set_gauge_thresholds old -> new
+GET  /villages/{id}/staff-gauges  public: [StaffGauge] (active; photo_url presigned)
+POST /villages/{id}/staff-gauges  officer or own pradhan (Cedar manage_staff_gauge): multipart meta (JSON:
+                             name, name_hi, where, scale_top, scale_bottom, unit "class"|"cm", marks[{label,
+                             value, height_cm?, x, y}], watch_at?, warning_at?, critical_at?) + photo -> StaffGauge
+PATCH /villages/{id}/staff-gauges/{gid}  same Cedar: {name?, name_hi?, where?, watch_at?, warning_at?,
+                             critical_at?, active?} -> StaffGauge (audited)
+POST /reports/{id}/staff-reading  officer only (Cedar confirm_staff_reading): {value} confirms or adjusts,
+                             {unreadable: true} rejects -> Report; audited old -> new; re-runs the village
 POST /villages/{id}/checklist/{item}  officer (any village) or pradhan (own village only), Cedar
                              action tick_checklist: {done: bool} -> Checklist; 404 unknown village or item;
                              each change writes an Audit row (checklist_tick / checklist_untick)
@@ -112,7 +129,8 @@ POST /approval/{token}       signed link: {decision: "approve"|"decline"} -> Ale
 GET  /alerts/{id}/audio      {url|null, text_hi}   (presigned S3 URL; never synthesises client text)
 POST /alerts/{id}/ack        {token} -> {ok, acknowledged_at}
 POST /reports                multipart: village_id, text?, audio?, photo?, lat?, lon?,
-                             reporter_name?, offline_created? -> {report, track_code}
+                             reporter_name?, offline_created?, staff_gauge_id?, staff_mark? (needs the
+                             photo) -> {report, track_code}
 GET  /reports?village_id=&state=   officer/pradhan: [Report]
 PATCH /reports/{id}/state    officer: {state} -> Report (undo = PATCH back to previous_state)
 GET  /directives?village_id= [Directive]

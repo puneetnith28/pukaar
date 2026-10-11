@@ -44,6 +44,10 @@ DENY_HINTS = {
     "open_rollcall": "Only a district officer, or the pradhan of this village, can open a safety roll-call here.",
     "view_rollcall": "You can only see the roll-call of your own villages.",
     "remind_rollcall": "Only a district officer, or the pradhan of this village, can send a roll-call reminder.",
+    "view_gauge_proposal": "Only a district officer, or the pradhan of this village, can see its gauge proposal.",
+    "set_gauge_thresholds": "Only a district officer can change a gauge's thresholds.",
+    "manage_staff_gauge": "Only a district officer, or the pradhan of this village, can set up its staff gauge.",
+    "confirm_staff_reading": "Only a district officer can confirm a staff gauge reading.",
 }
 
 
