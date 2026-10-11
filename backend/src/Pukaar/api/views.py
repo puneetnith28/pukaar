@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import Any
 
 from Pukaar.core.config import get_settings
-from Pukaar.services import checklist, gauge, readiness, soil, storage
+from Pukaar.services import checklist, gauge, readiness, rollcall, soil, storage
 from Pukaar.services.nowcast import nowcast
 from Pukaar.store.models import Alert, Report, Village
 from Pukaar.store.repo import Repo
@@ -60,6 +60,8 @@ def village_detail(repo: Repo, v: Village) -> dict[str, Any]:
         "gauge": gauge.view(repo, v),
         "soil": soil_view(v, readings[0] if readings else None),
         "checklist": checklist.view(repo, v.id),
+        # an open safety roll-call: counts only, never names (services/rollcall.py)
+        "rollcall": rollcall.public_for_village(repo, v.id),
     }
 
 

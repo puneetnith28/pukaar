@@ -35,7 +35,7 @@ Every record that came from replay data carries `replay: true`.
 Public routes (no token): `GET /health`, `GET /villages`, `GET /villages/{id}`,
 `POST /reports`, `POST /alerts/{id}/ack`, `GET /approval/{token}`,
 `POST /approval/{token}`, `POST /telegram/webhook`, `GET /public/overview`,
-`GET /track/{code}`, `GET /replay/status`, `GET /alerts/{id}/audio`,
+`GET /track/{code}`, `GET /replay/status`, `GET /alerts/{id}/audio`, `GET /safe/{token}`,
 `POST /sensors/{id}/readings` (river gauge, HMAC-signed body, see docs/hardware/README.md),
 `GET /cap/alerts.atom` and `GET /cap/alerts/{id}.xml` (CAP 1.2 feed of published alerts, XML),
 `POST /auth/dev-login` (local only). Everything else needs an officer or
@@ -136,6 +136,25 @@ GET  /public/overview        {counters{villages_watched, alerts_sent, phones_ack
 GET  /track/{code}           {code, village_name, village_name_hi, created_at, report_type, state,
                               steps[{key:"received"|"verified"|"acted_on", done, at|null}]}
 POST /telegram/webhook       Telegram update; header X-Telegram-Bot-Api-Secret-Token
+                             callbacks: ack:<alert_id>, safe:<rollcall_id>, help:<rollcall_id>
+
+Safety roll-call ("Surakshit Hoon"); officer any village, pradhan own villages (Cedar view_rollcall,
+open_rollcall, remind_rollcall). No chat id or phone number in any of these shapes.
+RollCall  {id, village_id, village_name, village_name_hi, alert_id|null, level|null, opened_at, closes_at,
+           opened_by: "system"|"officer", opened_by_user|null, exercise, asked, safe, need_help,
+           not_answered, open, last_reminded_at|null, reminders}
+Board     {rollcall: RollCall, need_help[{name, at, note|null, simulated}], safe[{name, at, simulated}],
+           not_answered[{name, demo, asked_at, reminded_at|null, failed}], remind_every_seconds}
+GET  /rollcalls?village_id=  [RollCall] newest first
+GET  /rollcalls/{id}         Board
+POST /rollcalls              {village_id, exercise?} -> Board; 409 {detail{code:"already_open", rollcall_id}}
+POST /rollcalls/{id}/remind  {} -> {reminded, waiting, demo_without_phone, last_reminded_at, board};
+                             429 {detail{code:"rate_limited", retry_after_seconds, message_en, message_hi}}
+GET  /safe/{token}           public family link: {first_name|null, village_name, village_name_hi, at,
+                             status:"safe", exercise, simulated}; 400 invalid, 410 expired | not_current
+GET  /villages/{id} and /public/overview villages[] also carry
+                             rollcall: {open, exercise, asked, safe, need_help, not_answered, opened_at,
+                             closes_at} | null   (counts only, while one is open)
 ```
 
 ## AWS resources (stack `pukaar-dev`, region `us-east-1`)

@@ -296,3 +296,54 @@ class ReplayState(BaseModel):
     started_at: str | None = None
     updated_at: str | None = None
     source: str | None = None
+
+
+RollCallAnswer = Literal["safe", "need_help"]
+
+
+class RollCall(BaseModel):
+    """A "Surakshit Hoon" (मैं सुरक्षित हूँ) safety roll-call for one village after an alert.
+
+    exercise=True for drills (labelled as such everywhere). Replays never open one.
+    Counts are kept on the record so the public page reads one item and no names.
+    """
+
+    id: str
+    village_id: str
+    village_name: str
+    village_name_hi: str
+    alert_id: str | None = None
+    level: Level | None = None
+    opened_at: str
+    closes_at: str
+    opened_by: Literal["system", "officer"] = "system"
+    opened_by_user: str | None = None
+    exercise: bool = False
+    asked: int = 0
+    safe: int = 0
+    need_help: int = 0
+    last_reminded_at: str | None = None
+    reminders: int = 0
+
+
+class RollCallAsked(BaseModel):
+    """Who the question went to. channel "stub" is a demo recipient with no phone: nothing was sent."""
+
+    rollcall_id: str
+    recipient_id: str
+    name: str
+    channel: Literal["telegram", "stub"]
+    asked_at: str
+    reminded_at: str | None = None
+    error: str | None = None
+
+
+class RollCallResponse(BaseModel):
+    rollcall_id: str
+    recipient_id: str
+    name: str
+    status: RollCallAnswer
+    at: str
+    note: str | None = None  # optional free text (140 chars at most) sent after "need help"
+    share_id: str | None = None  # opaque id behind the family link, so no chat id is in the link
+    simulated: bool = False  # set only by tests and demo tooling for stub recipients, never by a real tap
