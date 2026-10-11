@@ -10,6 +10,7 @@ from datetime import timedelta
 from typing import Any, Callable
 
 from Pukaar.core import clock
+from Pukaar.services import safe_places
 from Pukaar.store.models import level_rank
 from Pukaar.store.repo import Repo
 
@@ -49,8 +50,11 @@ class DataTools:
         return [e.model_dump() for e in self.repo.list_past_events(v.id)]
 
     def get_safe_places(self, village_id: str) -> list[dict]:
-        self._village(village_id)
-        return []  # safe-places map is a stretch item; no verified places stored yet
+        """Baked OpenStreetMap places a pradhan or officer has marked OPEN or STANDBY; never unconfirmed ones."""
+        v = self._village(village_id)
+        return [{"id": p["id"], "name": p.get("name"), "name_hi": p.get("name_hi"), "kind": p.get("kind"),
+                 "status": p["status"], "headroom_m": p.get("headroom_m"), "route_length_m": p.get("route_length_m"),
+                 "walk_min": p.get("walk_min")} for p in safe_places.usable(self.repo, v.id)]
 
     # -- analyst agent -------------------------------------------------------
     def rank_villages(self) -> list[dict]:
@@ -136,7 +140,7 @@ class DataTools:
             "get_village_risk": "Current level, latest reading and thresholds for a village. Args: village_id",
             "get_recent_reports": "Villager reports from the last hours (UNVERIFIED ones labelled). Args: village_id, hours",
             "get_past_events": "Recorded past flood events for a village. Args: village_id",
-            "get_safe_places": "Verified safe places for a village. Args: village_id",
+            "get_safe_places": "Safe places a pradhan or officer marked OPEN or STANDBY for a village. Args: village_id",
             "rank_villages": "All villages ranked by level and forecast river peak against the warning threshold.",
             "query_readings": "Forecast rain and river-peak readings for a village over recent hours. Args: village_id, hours",
             "query_alerts": "Alerts, optionally filtered by status (comma list) and village_id.",

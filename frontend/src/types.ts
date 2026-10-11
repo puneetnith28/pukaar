@@ -479,3 +479,63 @@ export interface Backtest {
   rules?: string;
   scenarios: BacktestScenario[];
 }
+
+/* ---------- safe places (GET /villages/{id}/safe-places) ---------- */
+
+export type ShelterState = 'OPEN' | 'STANDBY' | 'FULL' | 'CLOSED';
+/** UNCONFIRMED: no pradhan or officer has said anything about this place yet. */
+export type ShelterLedgerState = ShelterState | 'UNCONFIRMED';
+
+export interface ShelterLedger {
+  status: ShelterLedgerState;
+  capacity: number | null;
+  note: string;
+  updated_by: string | null;
+  updated_at: string | null;
+}
+
+export interface SafePlace {
+  id: string;
+  osm_url: string;
+  name: string;
+  name_hi: string;
+  kind: string;
+  kind_en: string;
+  kind_hi: string;
+  lat: number;
+  lon: number;
+  elevation_m: number;
+  /** Height above the river near the village (and above the nearest mapped stream), whichever is less. */
+  headroom_m: number;
+  route_length_m: number;
+  off_network_m: number;
+  climb_m: number;
+  max_grade: number;
+  steep_m: number;
+  near_water_m: number;
+  walk_min: number;
+  rank: number;
+  ledger: ShelterLedger;
+}
+
+export interface RouteFeature {
+  type: 'Feature';
+  geometry: { type: 'LineString'; coordinates: [number, number][] } | { type: 'Point'; coordinates: [number, number] };
+  properties: { feature: 'route' | 'start'; rank?: number; place_id?: string; steep?: boolean; name?: string };
+}
+
+export interface SafePlacesView extends SampleFlag {
+  village_id: string;
+  available: boolean;
+  places: SafePlace[];
+  routes: { type: 'FeatureCollection'; features: RouteFeature[] };
+  river_level_m?: number | null;
+  river_level_method?: string | null;
+  candidates?: Record<string, number> | null;
+  notes: string[];
+  attribution: string | null;
+  terrain_attribution?: string | null;
+  license?: string | null;
+  limits_en: string;
+  limits_hi: string;
+}

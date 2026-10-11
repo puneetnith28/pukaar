@@ -4,14 +4,14 @@
 // Context:    level, approved, all_officers_timed_out, replay, channel, village_id.
 
 @id("officer-operate")
-@desc("Officers run the console: approve or decline alerts, triage reports, issue directives, run replays, read the audit trail and ask the analyst.")
+@desc("Officers run the console: approve or decline alerts, triage reports, issue directives, update the shelter ledger, run replays, read the audit trail and ask the analyst.")
 permit (
   principal is Pukaar::Officer,
   action in [
     Pukaar::Action::"view_console", Pukaar::Action::"approve", Pukaar::Action::"decline",
     Pukaar::Action::"view_reports", Pukaar::Action::"set_report_state", Pukaar::Action::"issue_directive",
     Pukaar::Action::"start_replay", Pukaar::Action::"read_audit", Pukaar::Action::"ask_analyst",
-    Pukaar::Action::"health_deep", Pukaar::Action::"dev_link"
+    Pukaar::Action::"health_deep", Pukaar::Action::"dev_link", Pukaar::Action::"set_shelter_status"
   ],
   resource
 );
@@ -24,6 +24,15 @@ permit (
   resource
 )
 when { context.village_id == "" || principal.village_ids.contains(context.village_id) };
+
+@id("pradhan-own-shelters")
+@desc("A pradhan updates the shelter ledger (open, standby, full, closed) for their own villages only.")
+permit (
+  principal is Pukaar::Pradhan,
+  action == Pukaar::Action::"set_shelter_status",
+  resource is Pukaar::Village
+)
+when { context.village_id != "" && principal.village_ids.contains(context.village_id) };
 
 @id("system-deliver-approved")
 @desc("The system delivers an alert only after an officer approved it.")
@@ -70,12 +79,13 @@ forbid (
 when { context.replay == true && context.channel == "telegram" };
 
 @id("agents-never-send")
-@desc("A model agent can never approve, send or change a level.")
+@desc("A model agent can never approve, send, change a level or change the shelter ledger.")
 forbid (
   principal is Pukaar::Agent,
   action in [
     Pukaar::Action::"approve", Pukaar::Action::"decline", Pukaar::Action::"deliver",
-    Pukaar::Action::"auto_send", Pukaar::Action::"failsafe", Pukaar::Action::"issue_directive"
+    Pukaar::Action::"auto_send", Pukaar::Action::"failsafe", Pukaar::Action::"issue_directive",
+    Pukaar::Action::"set_shelter_status"
   ],
   resource
 );

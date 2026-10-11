@@ -2,7 +2,7 @@
 
 Keys:
   VILLAGE#id  META | READING#iso | SENSOR#iso#device | SENSORLAST#device | REPORT#iso#id | DEDUPE#window | RECIPIENT#id
-              | EVENT#date | DIRECTIVE#iso#id
+              | EVENT#date | DIRECTIVE#iso#id | SHELTER#place_id
   ALERT#id    META | DELIVERY#recipient | TIMELINE#iso#n
   ALERTLOG    iso#alert_id            (index of every alert, newest last)
   REPORTREF#id META                   (pointer to the report item)
@@ -37,6 +37,7 @@ from Pukaar.store.models import (
     ReplayState,
     Report,
     SensorReading,
+    ShelterStatus,
     TimelineEvent,
     Village,
 )
@@ -339,6 +340,14 @@ class Repo:
     def list_directives(self, village_id: str) -> list[Directive]:
         items = self._query(f"VILLAGE#{village_id}", "DIRECTIVE#", newest_first=True)
         return [_model(Directive, i) for i in items]
+
+    # -- shelter ledger --------------------------------------------------
+    def put_shelter(self, s: ShelterStatus) -> None:
+        self._put({"pk": f"VILLAGE#{s.village_id}", "sk": f"SHELTER#{s.place_id}", **s.model_dump()})
+
+    def list_shelters(self, village_id: str) -> dict[str, ShelterStatus]:
+        rows = [_model(ShelterStatus, i) for i in self._query(f"VILLAGE#{village_id}", "SHELTER#")]
+        return {r.place_id: r for r in rows}
 
     # -- alerts ----------------------------------------------------------
     def put_alert(self, a: Alert) -> None:

@@ -1,6 +1,6 @@
 """Reset the demo: stop any replay, remove alerts, reports, readings and
 directives, put every village back to normal, and re-seed. Audit rows stay
-(append-only); Telegram recipients and officer chat links stay.
+(append-only); Telegram recipients, officer chat links and the shelter ledger stay.
 
     python -m Pukaar.scripts.reset_demo
 """
@@ -12,7 +12,7 @@ from Pukaar.services import replay
 from Pukaar.store.repo import get_repo
 
 _KEEP_PREFIXES = ("AUDIT#", "OFFICER#")
-_KEEP_SK_PREFIXES = ("META", "RECIPIENT#", "EVENT#")
+_KEEP_SK_PREFIXES = ("META", "RECIPIENT#", "EVENT#", "SHELTER#")  # the shelter ledger is real, not demo state
 
 
 def _removable(item: dict) -> bool:

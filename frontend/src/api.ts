@@ -20,6 +20,8 @@ import type {
   ReplayStatus,
   Report,
   ReportState,
+  SafePlacesView,
+  ShelterState,
   Stats,
   TelegramLink,
   TrackView,
@@ -182,6 +184,9 @@ export const api = {
 
   villages: () => request<Village[]>('/villages'),
   village: (id: string) => request<VillageDetail>(`/villages/${enc(id)}`),
+  safePlaces: (id: string) => request<SafePlacesView>(`/villages/${enc(id)}/safe-places`, { auth: false }),
+  setShelter: (villageId: string, placeId: string, body: { status: ShelterState; capacity?: number | null; note?: string }) =>
+    request<SafePlacesView>(`/villages/${enc(villageId)}/shelters/${enc(placeId)}`, { method: 'POST', body }),
 
   alerts: (p: { status?: AlertStatus; village_id?: string } = {}) => request<Alert[]>(`/alerts${qs(p)}`),
   alert: (id: string) => request<AlertDetail>(`/alerts/${enc(id)}`),
