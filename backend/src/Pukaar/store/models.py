@@ -115,6 +115,8 @@ class SensorReading(BaseModel):
     rssi: int | None = None
     simulated: bool = False
     received_at: str | None = None
+    # How it arrived: a signed HTTPS POST, or MQTT over AWS IoT Core (X.509 per device).
+    transport: Literal["https", "mqtt"] = "https"
 
 
 class Report(BaseModel):
