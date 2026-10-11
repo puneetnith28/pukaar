@@ -14,6 +14,21 @@ from Pukaar.store.models import level_rank
 from Pukaar.store.repo import Repo
 
 
+# What each tool does, as the model sees it (also shown on the public /agents page).
+TOOL_DOCS: dict[str, str] = {
+    "get_village_risk": "Current level, latest reading and thresholds for a village. Args: village_id",
+    "get_recent_reports": "Villager reports from the last hours (UNVERIFIED ones labelled). Args: village_id, hours",
+    "get_past_events": "Recorded past flood events for a village. Args: village_id",
+    "get_safe_places": "Verified safe places for a village. Args: village_id",
+    "rank_villages": "All villages ranked by level and forecast river peak against the warning threshold.",
+    "query_readings": "Forecast rain and river-peak readings for a village over recent hours. Args: village_id, hours",
+    "query_alerts": "Alerts, optionally filtered by status (comma list) and village_id.",
+    "query_deliveries": "Alert deliveries; by default only those never acknowledged.",
+    "query_reports": "Villager reports in the last hours, optionally for one village_id.",
+    "village_stats": "Counts of alerts, reports and past events for a village. Args: village_id",
+}
+
+
 class DataTools:
     def __init__(self, repo: Repo, charts: dict[str, Any] | None = None) -> None:
         self.repo = repo
@@ -132,20 +147,8 @@ class DataTools:
     def strands_tools(self, names: list[str]) -> list[Callable]:
         from strands import tool
 
-        docs = {
-            "get_village_risk": "Current level, latest reading and thresholds for a village. Args: village_id",
-            "get_recent_reports": "Villager reports from the last hours (UNVERIFIED ones labelled). Args: village_id, hours",
-            "get_past_events": "Recorded past flood events for a village. Args: village_id",
-            "get_safe_places": "Verified safe places for a village. Args: village_id",
-            "rank_villages": "All villages ranked by level and forecast river peak against the warning threshold.",
-            "query_readings": "Forecast rain and river-peak readings for a village over recent hours. Args: village_id, hours",
-            "query_alerts": "Alerts, optionally filtered by status (comma list) and village_id.",
-            "query_deliveries": "Alert deliveries; by default only those never acknowledged.",
-            "query_reports": "Villager reports in the last hours, optionally for one village_id.",
-            "village_stats": "Counts of alerts, reports and past events for a village. Args: village_id",
-        }
         wrapped = []
         for name in names:
             fn = getattr(self, name)
-            wrapped.append(tool(name=name, description=docs[name])(fn))
+            wrapped.append(tool(name=name, description=TOOL_DOCS[name])(fn))
         return wrapped

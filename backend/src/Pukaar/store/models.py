@@ -115,6 +115,7 @@ class SensorReading(BaseModel):
     rssi: int | None = None
     simulated: bool = False
     received_at: str | None = None
+    transport: str | None = None  # "http" (signed POST) or "mqtt" (AWS IoT Core); None for older rows
 
 
 class Report(BaseModel):

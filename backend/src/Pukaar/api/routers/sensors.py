@@ -68,7 +68,7 @@ async def post_reading(village_id: str, request: Request) -> JSONResponse:
         village_id=village.id, device_id=body.device_id, at=clock.iso(at), water_level_cm=body.water_level_cm,
         rain_mm_1h=body.rain_mm_1h, battery_v=body.battery_v, rssi=body.rssi,
         # A simulator labels itself; a "-sim" device id is always treated as simulated too.
-        simulated=body.simulated or body.device_id.endswith("-sim"), received_at=clock.iso(now),
+        simulated=body.simulated or body.device_id.endswith("-sim"), received_at=clock.iso(now), transport="http",
     )
     if not repo.put_sensor_reading(reading):
         return JSONResponse({"status": "ignored", "reason": "more than one reading per minute, or out of order"},

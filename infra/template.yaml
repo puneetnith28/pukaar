@@ -248,6 +248,10 @@ Resources:
         PublicOverview: { Type: HttpApi, Properties: { ApiId: !Ref HttpApi, Path: /public/overview, Method: GET, Auth: { Authorizer: NONE } } }
         Track: { Type: HttpApi, Properties: { ApiId: !Ref HttpApi, Path: "/track/{code}", Method: GET, Auth: { Authorizer: NONE } } }
         ReplayStatus: { Type: HttpApi, Properties: { ApiId: !Ref HttpApi, Path: /replay/status, Method: GET, Auth: { Authorizer: NONE } } }
+        # Read-only agent registry, decision traces and gauge board: no personal data (services/agents.py).
+        Agents: { Type: HttpApi, Properties: { ApiId: !Ref HttpApi, Path: /agents, Method: GET, Auth: { Authorizer: NONE } } }
+        AgentTraces: { Type: HttpApi, Properties: { ApiId: !Ref HttpApi, Path: /agents/traces, Method: GET, Auth: { Authorizer: NONE } } }
+        Sensors: { Type: HttpApi, Properties: { ApiId: !Ref HttpApi, Path: /sensors, Method: GET, Auth: { Authorizer: NONE } } }
         # River gauges have no Cognito account; each body carries a per-device HMAC signature (services/gauge.py).
         SensorReading: { Type: HttpApi, Properties: { ApiId: !Ref HttpApi, Path: "/sensors/{id}/readings", Method: POST, Auth: { Authorizer: NONE } } }
 
