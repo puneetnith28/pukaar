@@ -165,3 +165,29 @@ def test_cors_preflight_skips_the_authorizer():
     ]
     pre = [e for e in events if e.get("Method") == "OPTIONS" and e.get("Path") == "/{proxy+}"]
     assert pre and pre[0].get("Auth", {}).get("Authorizer") == "NONE"
+
+
+def test_apply_guardrail_scoped_to_the_report_guardrail():
+    """Only the worker screens report text, and only with Pukaar's own guardrail."""
+    grants = [(n, s) for n, s in _statements() if "bedrock:ApplyGuardrail" in _as_list(s["Action"])]
+    assert [n for n, _ in grants] == ["WorkerFunction"]
+    for _, s in grants:
+        assert _as_list(s["Action"]) == ["bedrock:ApplyGuardrail"]
+        assert s["Resource"] == {"Fn::GetAtt": "ReportGuardrail.GuardrailArn"}
+
+
+def test_report_guardrail_blocks_prompt_attacks_and_masks_phones():
+    from Pukaar.llm.guardrail import INSTRUCTION_TOPIC
+
+    g = RES["ReportGuardrail"]
+    assert g["Type"] == "AWS::Bedrock::Guardrail"
+    filters = {f["Type"]: f for f in g["Properties"]["ContentPolicyConfig"]["FiltersConfig"]}
+    assert filters["PROMPT_ATTACK"]["InputStrength"] == "HIGH" and filters["PROMPT_ATTACK"]["OutputStrength"] == "NONE"
+    topics = g["Properties"]["TopicPolicyConfig"]["TopicsConfig"]
+    assert any(t["Type"] == "DENY" and t["Name"] == INSTRUCTION_TOPIC for t in topics)
+    pii = {p["Type"]: p["Action"] for p in g["Properties"]["SensitiveInformationPolicyConfig"]["PiiEntitiesConfig"]}
+    assert pii == {"PHONE": "ANONYMIZE", "EMAIL": "ANONYMIZE"}
+    assert RES["ReportGuardrailVersion"]["Type"] == "AWS::Bedrock::GuardrailVersion"
+    env = T["Globals"]["Function"]["Environment"]["Variables"]
+    assert env["PUKAAR_GUARDRAIL_ID"] == {"Fn::GetAtt": "ReportGuardrail.GuardrailId"}
+    assert env["PUKAAR_GUARDRAIL_VERSION"] == {"Fn::GetAtt": "ReportGuardrailVersion.Version"}
