@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from Pukaar.services import gauge, storage
+from Pukaar.services import gauge, rollcall, storage
 from Pukaar.services.nowcast import nowcast
 from Pukaar.store.models import Alert, Report, Village
 from Pukaar.store.repo import Repo
@@ -43,6 +43,8 @@ def village_detail(repo: Repo, v: Village) -> dict[str, Any]:
         "directives": [d.model_dump() for d in repo.list_directives(v.id)[:5]],
         "nowcast": nowcast(readings[0] if readings else None, v.thresholds, v.level),
         "gauge": gauge.view(repo, v),
+        # an open safety roll-call: counts only, never names (services/rollcall.py)
+        "rollcall": rollcall.public_for_village(repo, v.id),
     }
 
 
