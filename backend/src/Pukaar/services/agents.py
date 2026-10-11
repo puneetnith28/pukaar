@@ -42,6 +42,10 @@ ACTION_TEXT: dict[str, tuple[str, str]] = {
     "auto_send": ("Auto-send without approval", "बिना मंज़ूरी अपने आप भेजना"),
     "failsafe": ("Fire the failsafe template", "फ़ेलसेफ़ संदेश भेजना"),
     "issue_directive": ("Issue an evacuation or other order", "निकासी या कोई आदेश जारी करना"),
+    "open_rollcall": ("Open a safety roll-call", "सुरक्षा हाज़िरी शुरू करना"),
+    "remind_rollcall": ("Remind people in a roll-call", "हाज़िरी की याद दिलाना"),
+    "set_shelter_status": ("Change the shelter ledger", "आश्रय की स्थिति बदलना"),
+    "block_road": ("Mark a road blocked or open", "सड़क बंद या खुली बताना"),
 }
 # By design, not by policy: the typed outputs have no field for these.
 DESIGN_NEVER: list[dict[str, str]] = [

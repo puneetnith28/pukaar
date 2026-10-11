@@ -141,7 +141,7 @@ Sources and verdicts: the research summary in [REFERENCE_REVIEW.md](REFERENCE_RE
 | 2 | Gauges over IoT Core | 1 | live (verified: MQTT with X.509 through IoT Core raised Gohar in a labelled simulation) |
 | 3 | Guardrails on villager text | 1 | live (verified: a prompt-attack report was held by Bedrock Guardrails) |
 | 4 | Visitor tour | 1 | built |
-| 5 | Safe places and routes | 2 | built (OSM coverage thin for Thunag and Gohar; road-blocking not yet built) |
+| 5 | Safe places and routes | 2 | built (OSM coverage thin for Thunag and Gohar; road blocks cross out baked routes and promote the next one; routes are not recomputed) |
 | 6 | After-action email | 2 | built; e-mail needs verified SES addresses (sandbox) |
 | 7 | Live push (AppSync Events) | 2 | built, deploy pending |
 | 8 | Satellite before/after | 2 | building |
