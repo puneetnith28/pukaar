@@ -63,11 +63,16 @@ def dev_approval_link(alert_id: str, principal: Principal = Depends(Allowed("dev
 
 @router.get("/health/deep")
 def health_deep(_: Principal = Depends(Allowed("health_deep"))) -> dict:
-    llm = _llm()
-    if llm is None:
-        return {"bedrock": "disabled", "model": get_settings().bedrock_model_id}
-    text = llm.generate_text("Reply with the single word OK.", "ping", max_tokens=5)
-    return {"bedrock": "ok" if text else "failed", "model": llm.model_name}
+    """One 1-token model call, now; the answer also refreshes the cached flag the /agents page reads."""
+    from Pukaar.services import model_probe
+
+    s = get_settings()
+    if not s.llm_enabled:
+        return {"bedrock": "disabled", "model": s.bedrock_model_id}
+    rec = model_probe.maybe_run(get_repo(), force=True) or {}
+    state = rec.get("state")
+    return {"bedrock": {"live": "ok", "pending": "pending model access"}.get(state or "", "failed"),
+            "model": s.bedrock_model_id, "detail": rec.get("detail", "probe did not run")}
 
 
 @router.get("/alerts")

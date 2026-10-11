@@ -369,6 +369,23 @@ class Repo:
         rows = [_model(ShelterStatus, i) for i in self._query(f"VILLAGE#{village_id}", "SHELTER#")]
         return {r.place_id: r for r in rows}
 
+    # -- Bedrock model-access probe (one item) ----------------------------
+    def get_model_probe(self) -> dict[str, Any] | None:
+        item = self._get("MODELPROBE", "META")
+        return {k: v for k, v in _from_dynamo(item).items() if k not in _KEY_FIELDS} if item else None
+
+    def claim_model_probe(self, now_iso: str, not_before_iso: str) -> bool:
+        """Claim the next probe: succeeds only if none has run since not_before_iso (one sweep wins a race)."""
+        try:
+            self._update("MODELPROBE", "META", {"checked_at": now_iso},
+                         condition=Attr("pk").not_exists() | Attr("checked_at").lt(not_before_iso))
+            return True
+        except ConflictError:
+            return False
+
+    def put_model_probe(self, fields: dict[str, Any]) -> None:
+        self._update("MODELPROBE", "META", fields)
+
     # -- road blocks on evacuation routes --------------------------------
     def put_roadblock(self, b: RoadBlock) -> None:
         """Write (or renew, or clear) a road block; DynamoDB drops it 7 days after its expiry time at the latest."""

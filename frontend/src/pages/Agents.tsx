@@ -202,6 +202,11 @@ function AgentCardView({ a, i }: { a: AgentCard; i: number }) {
         </div>
       </div>
       <p className="ag-role">{en ? a.role_en : a.role_hi}</p>
+      {a.status.evidence && (
+        <p className="ag-evidence" lang={en || !a.status.evidence_hi ? 'en' : 'hi'}>
+          {en ? a.status.evidence : a.status.evidence_hi || a.status.evidence}
+        </p>
+      )}
 
       <ul className="ag-prims" aria-label={en ? 'AWS primitives' : 'AWS के हिस्से'}>
         {a.primitives.map((p) => (

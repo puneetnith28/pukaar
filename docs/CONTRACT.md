@@ -88,7 +88,7 @@ Error     401 {detail: "Sign in required."}
 GET  /health                 {status, mode: "aws"|"local", workflow, model,
                               services{dynamodb,bedrock,polly,transcribe,telegram}, replay_active}
 GET  /dev/approval-link/{id} local mode only, officer: {url, token, officer} (demo of the one-tap link)
-GET  /health/deep            officer: one tiny model call
+GET  /health/deep            officer: one 1-token Converse call now; {bedrock: "ok"|"pending model access"|"failed"|"disabled", model, detail}; refreshes the cached model-access flag
 GET  /me                     {username, role, village_ids}
 POST /me/telegram-link       officer: {} -> {code, command, expires_in_seconds}  (one-time; send the
                              command to the bot to receive approval links in Telegram)

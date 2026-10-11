@@ -771,7 +771,9 @@ export interface AgentStatus {
   state: AgentState;
   label_en: string;
   label_hi: string;
+  /** What the status is based on (the last draft, or the cached model-access probe). */
   evidence: string;
+  evidence_hi?: string;
 }
 
 export interface AgentTool {
